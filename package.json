@@ -3,14 +3,23 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
-  "type" : "module",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^3.3.1"
+    "axios": "^1.9.0",
+    "chalk": "^4.1.2",
+    "discord.js": "^14.19.3",
+    "express": "^5.1.0",
+    "facebook-chat-api": "github:ruingl/facebook-chat-api",
+    "fs-extra": "^11.3.0",
+    "gradient-string": "^2.0.2",
+    "node-fetch": "^3.3.1",
+    "path": "^0.12.7",
+    "websocket": "^1.0.35"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
