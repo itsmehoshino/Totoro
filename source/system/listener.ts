@@ -8,9 +8,5 @@ import handleCommand from './handler/handleCommand';
 import handleEvent from './handler/handleEvent';
 
 export async function listener({ api, event }){
-  if (!isConnected){
-    isConnected = true;
-    await database.connect();
-  }
-
+  
 }

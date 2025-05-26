@@ -3,11 +3,14 @@ import { join } from 'path';
 import { log } from './system/views/custom';
 import { starter } from './system/views/starter';
 
+process.on("unhandledRejection", (error) => console.log("ERROR", error));
+process.on("uncaughtException", (error) => console.log("ERROR", error.stack));
+
 global.Totoro = {
   get config() {
     try {
       return JSON.parse(
-        fs.readFileSync(join(__dirname, "..", "settings.json"), "utf-8")
+        fs.readFileSync(join(__dirname, "..", "..", "..", "settings.json"), "utf-8")
       );
     } catch (error) {
       log("ERROR", "Missing settings.json file!");

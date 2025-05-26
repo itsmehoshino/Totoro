@@ -11,7 +11,7 @@ const themes = {
   default: gradient(["#4B5EAA", "#7B9FE7"]),
 };
 
-export function log(category, message, theme = "aqua") {
+export function log(category, message, theme = "sunflower") {
   const selectedGradient = themes[theme.toLowerCase()] || themes.default;
   const colorizedCategory = chalk.bold(selectedGradient(` ${category} `));
   console.log(`${colorizedCategory} ${message}`);

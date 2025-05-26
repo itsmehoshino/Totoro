@@ -1,7 +1,5 @@
 import { log } from './custom';
-import { discord } from '../plugins/discord-login';
 import { login } from '../plugins/facebook-login';
-import { telegram } from '../plugins/telegram-login';
 import util from '../utils';
 
 
@@ -22,8 +20,6 @@ export async function starter(){
   await util.loadEvents();
   log("LOGIN", "Preceeding to login...");
   await login();
-  await discord();
-  await telegram();
   log("NOTE", "This is a beta version, please report any bugs to the developer.");
   await new Promise((resolve) => setTimeout(resolve, 2000));
   log("SYSTEM", "Totoro is now online and ready to use!")

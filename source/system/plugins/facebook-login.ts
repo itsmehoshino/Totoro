@@ -1,42 +1,43 @@
-import { readFileSync } from "fs";
-import { execSync } from "child_process";
-import { join } from "path";
+import { readFileSync, existsSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { promisify } from "util";
 import { log } from "../views/custom";
 import { listener } from "../listener";
 
-try {
-  require.resolve("facebook-chat-api");
-} catch (e) {
-  console.log("facebook-chat-api not found, installing...");
-  execSync("npm install ruingl/facebook-chat-api", { stdio: "inherit" });
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import fca from "facebook-chat-api";
 fca.logging(false);
 const loginPromisified = promisify(fca.login);
 
-export async function login() {
+export async function login(fcaOptions?: object) {
   try {
-    const credentials = JSON.parse(
-      readFileSync(join(__dirname, "..", "..", "..", "cookies.json"), "utf-8")
-    );
-    const appState = credentials.appState;
+    log("FACEBOOK", "Logging in...");
+    const cookiesPath = join(__dirname, "..", "..", "..", "cookies.json");
+    if (!existsSync(cookiesPath)) {
+      throw new Error("cookies.json file not found");
+    }
+    const appState = JSON.parse(readFileSync(cookiesPath, "utf-8"));
+    if (Array.isArray(appState) && appState.length === 0) {
+      throw new Error("No Appstate provided");
+    }
     const api = await loginPromisified({ appState });
-    const FCA = global.Totoro?.config?.fcaOptions;
-    if (FCA) {
-      api.setOptions(FCA);
+    if (fcaOptions) {
+      api.setOptions(fcaOptions);
     }
     api.listenMqtt((err, event) => {
       if (err) {
-        log("ERROR", err);
+        const errorMessage = err.error || err.message || String(err);
+        log("ERROR", `MQTT error: ${errorMessage}`);
         return;
       }
       listener({ api, event });
     });
     return api;
   } catch (error) {
-    log("ERROR", `Login failed: ${error.message}`);
-    throw error;
+    const errorMessage = error.error || error.message || String(error);
+    log("FACEBOOK", `Login failed: ${errorMessage}`);
   }
 }
