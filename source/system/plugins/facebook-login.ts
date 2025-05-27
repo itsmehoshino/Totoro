@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { promisify } from "util";
 import { log } from "../views/custom";
 import { listener } from "../listener";
+import { discord } from "./discord-login";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,6 +36,9 @@ export async function login(fcaOptions?: object) {
       }
       listener({ api, event });
     });
+    log("SYSTEM", "Logging in to Diacord...")
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await discord();
     return api;
   } catch (error) {
     const errorMessage = error.error || error.message || String(error);

@@ -1,5 +1,5 @@
-run = "tsx ./source/main.ts"
-entrypoint = "./source/main.ts"
+run = "tsx spawner.ts"
+entrypoint = "spawner.ts"
 hidden = [".config", "package-lock.json", "tsconfig.json"]
 modules = ["nodejs-20"]
 
@@ -10,7 +10,7 @@ channel = "stable-24_05"
 requiredFiles = [".replit", "replit.nix", ".config"]
 
 [deployment]
-run = ["tsx", "./source/main.ts"]
+run = ["tsx", "spawner.ts"]
 deploymentTarget = "cloudrun"
 ignorePorts = false
 

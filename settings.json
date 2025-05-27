@@ -1,5 +1,8 @@
 {
-  "fcaOptions": {
-    "listenEvents": 
-  }
+  "prefix": "!",
+  "subprefix": ".",
+  "maintenance": false,
+  "developer": ["user1", "user2"],
+  "admin": ["user3"],
+  "moderator": ["user4"]
 }
