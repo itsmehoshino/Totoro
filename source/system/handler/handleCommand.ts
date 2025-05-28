@@ -4,7 +4,12 @@ import { aliases, role, cooldown } from '../listener';
 export async function handleCommand({ api, replies, args, event, cooldown, database, usersDB, threadDB }) {
   try {
     if (!event.body || typeof event.body !== 'string') return;
-    if (!(await threadDB.isApproved(event.threadID))) {
+    const threadData = await threadDB.get(event.threadID);
+    if (threadData.isBanned) {
+      await api.sendMessage('This group is banned from using the bot.', event.threadID);
+      return;
+    }
+    if (!threadData.isApproved) {
       await api.sendMessage('This group is not approved. Awaiting developer approval.', event.threadID);
       return;
     }

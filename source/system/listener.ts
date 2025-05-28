@@ -24,6 +24,11 @@ export async function listener({ api, event }) {
 
   if (event.type === 'event' && event.logMessageType === 'log:subscribe') {
     const threadID = event.threadID;
+    const threadData = await threadDB.get(threadID);
+    if (threadData.isBanned) {
+      await api.sendMessage('This group is banned from using the bot.', threadID);
+      return;
+    }
     const isApproved = await threadDB.isApproved(threadID);
     const pending = await threadDB.getPendingThread(threadID);
     if (!isApproved && !pending) {
@@ -33,7 +38,7 @@ export async function listener({ api, event }) {
         await threadDB.addPendingThread(threadID, groupName);
         const developerID = global.Totoro.config.developer;
         await api.sendMessage(
-          `Bot added to group: ${groupName} (ID: ${threadID}). Use "!approve ${threadID}" or "!deny ${threadID}".`,
+          `Bot added to group: ${groupName} (ID: ${threadID}). Use "!approve ${threadID}" to approve, "!deny ${threadID}" to deny, or "!ban ${threadID}" to ban.`,
           developerID
         );
         await api.sendMessage('Awaiting developer approval to activate.', threadID);
@@ -44,7 +49,8 @@ export async function listener({ api, event }) {
     return;
   }
 
-  if (!(await threadDB.isApproved(event.threadID))) {
+  const threadData = await threadDB.get(event.threadID);
+  if (threadData.isBanned || !(await threadDB.isApproved(event.threadID))) {
     return;
   }
 

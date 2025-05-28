@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises';
 import { join } from 'path';
 import { log } from './views/custom';
+import url from 'url';
 
 interface Command {
   meta: {
@@ -14,10 +15,12 @@ interface Command {
   execute: (params: { response: { reply: (message: string) => Promise<void> } }) => Promise<void>;
 }
 
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
 const util = {
   async loadCommands() {
     try {
-      const commandsDir = join(__dirname, '..', 'commands');
+      const commandsDir = join(__dirname, '..', '..', 'totoro', 'modules', 'commands');
       const files = await readdir(commandsDir);
       for (const file of files.filter(f => f.endsWith('.ts') || f.endsWith('.js'))) {
         try {
@@ -56,7 +59,7 @@ const util = {
 
   async loadEvents() {
     try {
-      const eventsDir = join(__dirname, '..', 'events');
+      const eventsDir = join(__dirname, '..', '..', 'totoro', 'modules', 'events');
       const files = await readdir(eventsDir);
       for (const file of files.filter(f => f.endsWith('.ts') || f.endsWith('.js'))) {
         try {

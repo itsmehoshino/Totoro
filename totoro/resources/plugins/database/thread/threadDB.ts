@@ -1,29 +1,24 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import * as fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
+import url from 'url';
 
-interface IThreadData extends Document {
-  key: string;
-  value: {
-    groupName: string | null;
-    isApproved: boolean;
-    lastModified: number;
-  };
-}
+const __dirname = url.fileURLToPath(import.meta.url)
 
 class ThreadDB {
   private uri: string | undefined;
-  private defaults: { groupName: string | null; isApproved: boolean; lastModified: number };
+  private defaults: { groupName: string | null; isApproved: boolean; isBanned: boolean; lastModified: number };
   private isJsonMode: boolean;
   private jsonFilePath: string;
   private cache: { [key: string]: any };
-  private ThreadModel: mongoose.Model<IThreadData>;
+  private ThreadModel: any;
 
   constructor({ uri = process.env.MONGO_URI }: { uri?: string } = {}) {
     this.defaults = {
       groupName: null,
       isApproved: false,
+      isBanned: false,
       lastModified: Date.now(),
     };
     this.uri = uri ?? process.env.MONGO_URI;
@@ -36,15 +31,16 @@ class ThreadDB {
       this.isJsonMode = true;
       this.cache = this.loadJsonDataSync();
     } else {
-      const threadSchema = new Schema<IThreadData>({
+      const threadSchema = new Schema({
         key: { type: String, required: true, unique: true },
         value: {
           groupName: { type: String, default: null },
           isApproved: { type: Boolean, default: false },
+          isBanned: { type: Boolean, default: false },
           lastModified: { type: Number, default: Date.now },
         },
       });
-      this.ThreadModel = mongoose.model<IThreadData>('ThreadData', threadSchema, 'totoroThreads');
+      this.ThreadModel = mongoose.model('ThreadData', threadSchema, 'totoroThreads');
     }
   }
 
@@ -80,6 +76,7 @@ class ThreadDB {
     data = data || {};
     data.groupName = typeof data.groupName === 'string' ? data.groupName.trim() : null;
     data.isApproved = typeof data.isApproved === 'boolean' ? data.isApproved : false;
+    data.isBanned = typeof data.isBanned === 'boolean' ? data.isBanned : false;
     data.lastModified = typeof data.lastModified === 'number' ? data.lastModified : Date.now();
     return data;
   }
@@ -117,7 +114,7 @@ class ThreadDB {
 
   async addPendingThread(threadID: string, groupName: string): Promise<void> {
     const threadData = await this.get(threadID);
-    if (!threadData.isApproved) {
+    if (!threadData.isApproved && !threadData.isBanned) {
       const updatedData = {
         ...threadData,
         groupName,
@@ -139,7 +136,7 @@ class ThreadDB {
 
   async isApproved(threadID: string): Promise<boolean> {
     const threadData = await this.get(threadID);
-    return threadData.isApproved;
+    return threadData.isApproved && !threadData.isBanned;
   }
 
   async approve(threadID: string): Promise<void> {
@@ -147,6 +144,7 @@ class ThreadDB {
     const updatedData = {
       ...threadData,
       isApproved: true,
+      isBanned: false,
       groupName: null,
       lastModified: Date.now(),
     };
@@ -183,9 +181,49 @@ class ThreadDB {
     }
   }
 
+  async ban(threadID: string) {
+    const threadData = await this.get(threadID);
+    const updatedData = {
+      ...threadData,
+      isBanned: true,
+      isApproved: false,
+      groupName: null,
+      lastModified: Date.now(),
+    };
+    if (this.isJsonMode) {
+      this.updateCache(threadID, updatedData);
+    } else {
+      await this.ThreadModel.updateOne(
+        { key: threadID },
+        { $set: { value: updatedData } },
+        { upsert: true }
+      ).exec();
+      this.updateCache(threadID, updatedData);
+    }
+  }
+
+  async unban(threadID: string) {
+    const threadData = await this.get(threadID);
+    const updatedData = {
+      ...threadData,
+      isBanned: false,
+      lastModified: Date.now(),
+    };
+    if (this.isJsonMode) {
+      this.updateCache(threadID, updatedData);
+    } else {
+      await this.ThreadModel.updateOne(
+        { key: threadID },
+        { $set: { value: updatedData } },
+        { upsert: true }
+      ).exec();
+      this.updateCache(threadID, updatedData);
+    }
+  }
+
   async getPendingThread(threadID: string): Promise<any> {
     const threadData = await this.get(threadID);
-    if (!threadData.isApproved && threadData.groupName) {
+    if (!threadData.isApproved && threadData.groupName && !threadData.isBanned) {
       return { name: threadData.groupName };
     }
     return null;
