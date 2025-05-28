@@ -10,7 +10,7 @@ global.Totoro = {
   get config() {
     try {
       return JSON.parse(
-        fs.readFileSync(join(__dirname, "..", "..", "..", "settings.json"), "utf-8")
+        fs.readFileSync(join(__dirname, "..", "settings.json"), "utf-8")
       );
     } catch (error) {
       log("ERROR", "Missing settings.json file!");

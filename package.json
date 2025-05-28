@@ -12,7 +12,9 @@
   "dependencies": {
     "axios": "^1.9.0",
     "chalk": "^4.1.2",
+    "cors": "^2.8.5",
     "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "facebook-chat-api": "github:ruingl/facebook-chat-api",
     "fs": "^0.0.1-security",
@@ -21,7 +23,8 @@
     "mongoose": "^8.15.1",
     "node-fetch": "^3.3.1",
     "path": "^0.12.7",
-    "websocket": "^1.0.35"
+    "websocket": "^1.0.35",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
