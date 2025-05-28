@@ -2,16 +2,10 @@ import mongoose, { Schema, Document } from 'mongoose';
 import * as fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
+import url from 'url';
 
-interface IUserStats extends Document {
-  key: string;
-  value: {
-    balance: number;
-    diamonds: number;
-    username: string | null;
-    lastModified: number;
-  };
-}
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class UserStatsManager {
   private uri: string | undefined;
@@ -19,7 +13,7 @@ class UserStatsManager {
   private isJsonMode: boolean;
   private jsonFilePath: string;
   private cache: { [key: string]: any };
-  private UserStatsModel: mongoose.Model<IUserStats>;
+  private UserStatsModel: mongoose.Model;
 
   constructor({ uri = process.env.MONGO_URI }: { uri?: string } = {}) {
     this.defaults = {
@@ -46,7 +40,7 @@ class UserStatsManager {
           lastModified: { type: Number, default: Date.now },
         },
       });
-      this.UserStatsModel = mongoose.model<IUserStats>('UserStats', userStatsSchema, 'tokitoDB');
+      this.UserStatsModel = mongoose.model<IUserStats>('UserStats', userStatsSchema, 'totorodata');
     }
   }
 

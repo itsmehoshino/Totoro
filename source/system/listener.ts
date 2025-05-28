@@ -22,10 +22,36 @@ export async function listener({ api, event }) {
 
   log({ ...event, participantIDs: {} });
 
-  const entryObj: EntryObj = {
+  if (event.type === 'event' && event.logMessageType === 'log:subscribe') {
+    const threadID = event.threadID;
+    const isApproved = await threadDB.isApproved(threadID);
+    const pending = await threadDB.getPendingThread(threadID);
+    if (!isApproved && !pending) {
+      try {
+        const threadInfo = await api.getThreadInfo(threadID);
+        const groupName = threadInfo.threadName || 'Unnamed Group';
+        await threadDB.addPendingThread(threadID, groupName);
+        const developerID = global.Totoro.config.developer;
+        await api.sendMessage(
+          `Bot added to group: ${groupName} (ID: ${threadID}). Use "!approve ${threadID}" or "!deny ${threadID}".`,
+          developerID
+        );
+        await api.sendMessage('Awaiting developer approval to activate.', threadID);
+      } catch (error) {
+        log('ERROR', `Failed to process group addition for ${threadID}: ${error.message}`);
+      }
+    }
+    return;
+  }
+
+  if (!(await threadDB.isApproved(event.threadID))) {
+    return;
+  }
+
+  const entryObj = {
     api,
     replies: global.Totoro.replies,
-    args: [],
+    args: event.body?.split(' ') || [],
     event,
     cooldown,
     database,
@@ -34,13 +60,13 @@ export async function listener({ api, event }) {
   };
 
   switch (event.type) {
-    case "event":
+    case 'event':
       handleEvent({ ...entryObj });
       break;
-    case "message":
+    case 'message':
       await handleCommand({ ...entryObj });
       break;
-    case "message_reply":
+    case 'message_reply':
       handleReply({ ...entryObj });
       await handleCommand({ ...entryObj });
       break;
@@ -49,35 +75,26 @@ export async function listener({ api, event }) {
   }
 }
 
-export function aliases(commandName: string): string {
+export function aliases(commandName) {
   const command = global.Totoro.commands.get(commandName);
-  if (command?.meta?.name) {
-    return command.meta.name;
-  }
-  return commandName;
+  return command?.meta?.name || commandName;
 }
 
-export function role(userID: string, commandName: string): boolean {
+export function role(userID, commandName) {
   const command = global.Totoro.commands.get(commandName);
   if (!command?.meta?.role) return true;
   const role = command.meta.role;
   const config = global.Totoro.config;
-
   switch (role) {
-    case 0:
-      return true;
-    case 1:
-      return userID === config.developer;
-    case 2:
-      return config.admin?.includes(userID) ?? false;
-    case 3:
-      return config.moderator?.includes(userID) ?? false;
-    default:
-      return false;
+    case 0: return true;
+    case 1: return userID === config.developer;
+    case 2: return config.admin?.includes(userID) ?? false;
+    case 3: return config.moderator?.includes(userID) ?? false;
+    default: return false;
   }
 }
 
-export async function cooldown(userID: string, threadID: string, commandName: string, api: any): Promise<boolean> {
+export async function cooldown(userID, threadID, commandName, api) {
   const command = global.Totoro.commands.get(commandName);
   if (!command?.meta?.cooldown) return true;
   const cooldownKey = `${userID}:${threadID}:${commandName}`;

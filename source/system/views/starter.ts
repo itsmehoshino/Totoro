@@ -11,9 +11,9 @@ export async function starter(){
      DEVELOPED BY: FRANCIS LOYD RAVAL`;
   log(top, "");
   console.log();
-  log("SYSTEM", "Hello Developer, Welcome to Hoshino!");
+  log("SYSTEM", "Hello Developer, Welcome to Totoro!");
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  log("SYSTEM", "Hoshino is now running...");
+  log("SYSTEM", "Totoro is now running...");
   await new Promise((resolve) => setTimeout(resolve, 1000));
   await util.loadCommands();
   await new Promise((resolve) => setTimeout(resolve, 1000));
