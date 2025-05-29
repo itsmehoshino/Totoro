@@ -1,7 +1,12 @@
 import fs from 'fs-extra';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { log } from './system/views/custom';
 import { starter } from './system/views/starter';
+
+// Define __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 process.on("unhandledRejection", (error) => console.log("ERROR", error));
 process.on("uncaughtException", (error) => console.log("ERROR", error.stack));
