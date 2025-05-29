@@ -3,28 +3,17 @@ import { join } from 'path';
 import { log } from './views/custom';
 import url from 'url';
 
-interface Command {
-  meta: {
-    name: string;
-    aliases: string[];
-    category: string;
-    description: string;
-    developer: string;
-    usage: string;
-  };
-  execute: (params: { response: { reply: (message: string) => Promise<void> } }) => Promise<void>;
-}
-
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const util = {
   async loadCommands() {
+    let commandCount = 0;
     try {
       const commandsDir = join(__dirname, '..', '..', 'totoro', 'modules', 'commands');
       const files = await readdir(commandsDir);
       for (const file of files.filter(f => f.endsWith('.ts') || f.endsWith('.js'))) {
         try {
-          const command: Command = (await import(join(commandsDir, file))).default;
+          const command = (await import(join(commandsDir, file))).default;
           if (!command) {
             log('FAILED', `No default export in command file: ${file}, please open your code`);
             continue;
@@ -45,12 +34,17 @@ const util = {
           for (const alias of command.meta.aliases || []) {
             global.Totoro.commands.set(alias, command);
           }
+          commandCount++;
           log('COMMANDS', `Loaded command: ${command.meta.name} (Category: ${command.meta.category})`);
         } catch (error) {
           log('FAILED', `Error loading command file ${file}: ${error.message}`);
         }
       }
-      log('SYSTEM', `Successfully loaded ${global.Totoro.commands.size} commands`);
+      if (commandCount === 0) {
+        log('SYSTEM', 'No commands loaded');
+      } else {
+        log('SYSTEM', `Successfully loaded ${commandCount} commands`);
+      }
     } catch (error) {
       log('ERROR', `Failed to load commands: ${error.message}`);
       throw error;
@@ -58,6 +52,7 @@ const util = {
   },
 
   async loadEvents() {
+    let eventCount = 0;
     try {
       const eventsDir = join(__dirname, '..', '..', 'totoro', 'modules', 'events');
       const files = await readdir(eventsDir);
@@ -69,12 +64,17 @@ const util = {
             continue;
           }
           global.Totoro.events.set(event.name, event);
+          eventCount++;
           log('EVENTS', `Loaded event: ${event.name}`);
         } catch (error) {
           log('FAILED', `Error loading event file ${file}: ${error.message}`);
         }
       }
-      log('SYSTEM', `Successfully loaded ${global.Totoro.events.size} events`);
+      if (eventCount === 0) {
+        log('SYSTEM', 'No events loaded');
+      } else {
+        log('SYSTEM', `Successfully loaded ${global.Totoro.events.size} events`);
+      }
     } catch (error) {
       log('ERROR', `Failed to load events: ${error.message}`);
       throw error;
