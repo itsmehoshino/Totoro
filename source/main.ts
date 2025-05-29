@@ -14,8 +14,8 @@ global.Totoro = {
       );
     } catch (error) {
       log("ERROR", "Missing settings.json file!");
+      throw error;
     }
-    return {};
   },
   set config(config) {
     const data = global.Totoro.config;
