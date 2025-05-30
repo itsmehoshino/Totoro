@@ -2,8 +2,10 @@ import { log } from './custom';
 import { login } from '../plugins/facebook-login';
 import util from '../utils';
 import express from 'express';
+import totoro from '../plugins/auto-totoro';
 
 const app = express();
+app.use("", totoro);
 
 export async function starter(){
   console.clear();
