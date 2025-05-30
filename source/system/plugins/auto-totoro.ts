@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "crypto";
-import { listener } from "./system/listener";
+import { listener } from "../system/listener";
 
 const router = express.Router();
 const allResolve = new Map<string, (value: any) => void>();
