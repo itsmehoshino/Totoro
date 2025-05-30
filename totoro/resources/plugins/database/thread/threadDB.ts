@@ -2,9 +2,6 @@ import mongoose, { Schema } from 'mongoose';
 import * as fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import url from 'url';
-
-const __dirname = url.fileURLToPath(import.meta.url)
 
 class ThreadDB {
   private uri: string | undefined;
@@ -23,7 +20,7 @@ class ThreadDB {
     };
     this.uri = uri ?? process.env.MONGO_URI;
     this.isJsonMode = false;
-    this.jsonFilePath = path.join(__dirname, 'threadData.json');
+    this.jsonFilePath = path.join('data', 'threadData.json');
     this.cache = {};
 
     if (!this.uri) {
@@ -46,11 +43,33 @@ class ThreadDB {
 
   private loadJsonDataSync(): { [key: string]: any } {
     try {
-      if (fs.existsSync(this.jsonFilePath)) {
-        const data = fs.readFileSync(this.jsonFilePath, 'utf8');
-        return JSON.parse(data) || {};
+      if (!fs.existsSync(this.jsonFilePath)) {
+        const exampleData = {
+          '1001': {
+            groupName: null,
+            isApproved: true,
+            isBanned: false,
+            lastModified: Date.now(),
+          },
+          '1002': {
+            groupName: 'Pending Group',
+            isApproved: false,
+            isBanned: false,
+            lastModified: Date.now(),
+          },
+          '1003': {
+            groupName: null,
+            isApproved: false,
+            isBanned: true,
+            lastModified: Date.now(),
+          },
+        };
+        fs.mkdirSync(path.dirname(this.jsonFilePath), { recursive: true });
+        fs.writeFileSync(this.jsonFilePath, JSON.stringify(exampleData, null, 2));
+        return exampleData;
       }
-      return {};
+      const data = fs.readFileSync(this.jsonFilePath, 'utf8');
+      return JSON.parse(data) || {};
     } catch (error) {
       console.error('Error loading JSON data:', error);
       return {};
@@ -59,6 +78,7 @@ class ThreadDB {
 
   private async saveJsonData(data: any): Promise<void> {
     try {
+      await fsPromises.mkdir(path.dirname(this.jsonFilePath), { recursive: true });
       await fsPromises.writeFile(this.jsonFilePath, JSON.stringify(data, null, 2));
     } catch (error) {
       console.error('Error saving JSON data:', error);
