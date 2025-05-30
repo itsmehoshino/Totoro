@@ -1,7 +1,7 @@
 import { log } from '../views/custom';
 import { aliases, role, cooldown } from '../listener';
 
-export async function handleCommand({ api, replies, args, event, cooldown, database, usersDB, threadDB }) {
+export async function handleCommand({ api, replies, args, event, cooldown, database, threadDB }) {
   try {
     if (!event.body || typeof event.body !== 'string') return;
     const threadData = await threadDB.get(event.threadID);
@@ -60,7 +60,6 @@ export async function handleCommand({ api, replies, args, event, cooldown, datab
       args: commandArgs,
       event,
       database,
-      usersDB,
       threadDB,
     });
     log('COMMANDS', `Executed command: ${commandName} with args [${commandArgs.join(', ')}] by user ${event.senderID} in thread ${event.threadID}`);
