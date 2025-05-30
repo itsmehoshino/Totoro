@@ -1,111 +1,115 @@
-let isConnected = false;
-import { handleReply } from './handler/handleReply';
-import { handleCommand } from './handler/handleCommand';
-import { handleEvent } from './handler/handleEvent';
-import Database from '../../totoro/resources/plugins/database/data/database.ts';
-import ThreadDB from '../../totoro/resources/plugins/database/thread/threadDB.ts';
+import { eventHandler } from './handler/eventHandler';
+import { commandHandler } from './handler/commandHandler';
+import route from './handler/apisHandler';
 
-const database = new Database();
-const threadDB = new ThreadDB();
+export async function listener({ api, event }: { api: any; event: any }): Promise<void> {
+  if (!event.body) return;
 
-export async function listener({ api, event }) {
-  if (!isConnected) {
-    await database.connect();
-    await threadDB.connect();
-    isConnected = true;
-  }
+  const usedPrefix = global.Totoro.prefix;
 
-  console.log({ ...event, participantIDs: {} });
+  if (!event.body.startsWith(usedPrefix)) return;
 
-  if (event.type === 'event' && event.logMessageType === 'log:subscribe') {
-    const threadID = event.threadID;
-    const threadData = await threadDB.get(threadID);
-    if (threadData.isBanned) {
-      await api.sendMessage('This group is banned from using the bot.', threadID);
-      return;
-    }
-    const isApproved = await threadDB.isApproved(threadID);
-    const pending = await threadDB.getPendingThread(threadID);
-    if (!isApproved && !pending) {
-      try {
-        const threadInfo = await api.getThreadInfo(threadID);
-        const groupName = threadInfo.threadName || 'Unnamed Group';
-        await threadDB.addPendingThread(threadID, groupName);
-        const developerID = global.Totoro.config.developer;
-        await api.sendMessage(
-          `Bot added to group: ${groupName} (ID: ${threadID}). Use "!approve ${threadID}" to approve, "!deny ${threadID}" to deny, or "!ban ${threadID}" to ban.`,
-          developerID
-        );
-        await api.sendMessage('Awaiting developer approval to activate.', threadID);
-      } catch (error) {
-        log('ERROR', `Failed to process group addition for ${threadID}: ${error.message}`);
-      }
-    }
-    return;
-  }
+  const [commandName, ...args] = event.body.slice(usedPrefix.length).split(' ');
+  const command = global.Totoro.commands.get(commandName.toLowerCase());
 
-  const threadData = await threadDB.get(event.threadID);
-  if (threadData.isBanned || !(await threadDB.isApproved(event.threadID))) {
-    return;
-  }
+  const chatBox = {
+    react: (emoji: string) => api.setMessageReaction(emoji, event.messageID, () => {}),
+    send: (message: string, id?: string) => api.sendMessage(message, id || event.threadID, event.messageID),
+    addParticipant: (uid: string) => api.addUserToGroup(uid, event.threadID),
+    removeParticipant: (uid: string) => api.removeUserFromGroup(uid, event.threadID),
+    threadInfo: async () => await api.getThreadInfo(event.threadID),
+  };
+
+  const chat = {
+    ...chatBox,
+    send: (message: string, goal?: string): Promise<boolean> => {
+      return new Promise((res, rej) => {
+        api.sendMessage(message, goal || event.threadID, (err: any) => {
+          if (err) rej(err);
+          else res(true);
+        });
+      });
+    },
+    edit: (msg: string, mid: string): Promise<boolean> => {
+      return new Promise((res, rej) => {
+        api.editMessage(msg, mid, (err: any) => {
+          if (err) rej(err);
+          else res(true);
+        });
+      });
+    },
+    fbPost: async ({ body, attachment }: { body?: string; attachment?: any[] }): Promise<any> => {
+      return new Promise((resolve, reject) => {
+        api.createPost({ body: body || '', attachment: attachment || [] }, (error: any, data: any) => {
+          if (error) {
+            console.error('Facebook Post Error:', error);
+            reject({ success: false, message: 'Failed to create post', error });
+            return;
+          }
+
+          if (!data?.data || data.errors) {
+            console.error('Unexpected API Response:', data);
+            reject({ success: false, message: 'API returned an error', data });
+            return;
+          }
+
+          console.log('Post Successful:', data);
+          resolve({ success: true, data });
+        });
+      });
+    },
+  };
 
   const entryObj = {
     api,
-    replies: global.Totoro.replies,
-    args: event.body?.split(' ') || [],
+    chat,
     event,
-    cooldown,
-    database,
-    threadDB,
+    args,
+    fonts,
+    route,
   };
 
+  if (command) {
+    const { config } = command.meta;
+    const senderID = event.senderID;
+
+    const admins = global.Totoro.config.admins || [];
+    const moderators = global.Totoro.config.moderators || [];
+
+    const isAdmin = admins.includes(senderID);
+    const isModerator = moderators.includes(senderID);
+
+    if (config?.botAdmin && !isAdmin) {
+      await chat.send(fonts.sans('Access denied, you don\'t have rights to use this admin-only command.'));
+      return;
+    }
+
+    if (config?.botModerator && !isModerator && !isAdmin) {
+      await chat.send(fonts.sans('Access denied, you don\'t have rights to use this moderator-only command.'));
+      return;
+    }
+
+    try {
+      await command.execute(entryObj);
+    } catch (err) {
+      console.error(`Error executing command "${commandName}":`, err);
+    }
+    return;
+  }
+
+  console.log(`Unknown command: ${commandName}`);
+
   switch (event.type) {
-    case 'event':
-      handleEvent({ ...entryObj });
-      break;
     case 'message':
-      await handleCommand({ ...entryObj });
+      commandHandler({ ...entryObj });
+      break;
+    case 'event':
+      eventHandler({ ...entryObj });
       break;
     case 'message_reply':
-      handleReply({ ...entryObj });
-      await handleCommand({ ...entryObj });
+      commandHandler({ ...entryObj });
       break;
     default:
-      break;
+      console.log(`Unhandled event type: ${event.type}`);
   }
-}
-
-export function aliases(commandName) {
-  const command = global.Totoro.commands.get(commandName);
-  return command?.meta?.name || commandName;
-}
-
-export function role(userID, commandName) {
-  const command = global.Totoro.commands.get(commandName);
-  if (!command?.meta?.role) return true;
-  const role = command.meta.role;
-  const config = global.Totoro.config;
-  switch (role) {
-    case 0: return true;
-    case 1: return userID === config.developer;
-    case 2: return config.admin?.includes(userID) ?? false;
-    case 3: return config.moderator?.includes(userID) ?? false;
-    default: return false;
-  }
-}
-
-export async function cooldown(userID, threadID, commandName, api) {
-  const command = global.Totoro.commands.get(commandName);
-  if (!command?.meta?.cooldown) return true;
-  const cooldownKey = `${userID}:${threadID}:${commandName}`;
-  const now = Date.now();
-  const cooldownEnd = global.Totoro.cooldowns.get(cooldownKey);
-  if (cooldownEnd && now < cooldownEnd) {
-    const remaining = Math.ceil((cooldownEnd - now) / 1000);
-    await api.sendMessage(`Please wait ${remaining} seconds before using this command again.`, threadID);
-    return false;
-  }
-  global.Totoro.cooldowns.set(cooldownKey, now + command.meta.cooldown * 1000);
-  setTimeout(() => global.Totoro.cooldowns.delete(cooldownKey), command.meta.cooldown * 1000);
-  return true;
 }
