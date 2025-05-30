@@ -1,6 +1,4 @@
 let isConnected = false;
-
-import { log } from './views/custom';
 import { handleReply } from './handler/handleReply';
 import { handleCommand } from './handler/handleCommand';
 import { handleEvent } from './handler/handleEvent';
@@ -17,7 +15,7 @@ export async function listener({ api, event }) {
     isConnected = true;
   }
 
-  log({ ...event, participantIDs: {} });
+  console.log({ ...event, participantIDs: {} });
 
   if (event.type === 'event' && event.logMessageType === 'log:subscribe') {
     const threadID = event.threadID;
