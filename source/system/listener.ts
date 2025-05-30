@@ -20,7 +20,7 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
     threadInfo: async () => await api.getThreadInfo(event.threadID),
   };
 
-  const chat = {
+  const response = {
     ...chatBox,
     send: (message: string, goal?: string): Promise<boolean> => {
       return new Promise((res, rej) => {
@@ -62,7 +62,7 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
 
   const entryObj = {
     api,
-    chat,
+    response,
     event,
     args,
     fonts,
