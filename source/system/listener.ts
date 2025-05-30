@@ -1,6 +1,5 @@
-import { eventHandler } from './handler/eventHandler';
-import { commandHandler } from './handler/commandHandler';
-import route from './handler/apisHandler';
+import { handleEvent } from './handler/handleEvent';
+import { handleCommand } from './handler/handleCommand';
 
 export async function listener({ api, event }: { api: any; event: any }): Promise<void> {
   if (!event.body) return;
@@ -65,8 +64,6 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
     response,
     event,
     args,
-    fonts,
-    route,
   };
 
   if (command) {
