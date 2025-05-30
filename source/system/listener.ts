@@ -5,17 +5,14 @@ import { handleReply } from './handler/handleReply';
 import { handleCommand } from './handler/handleCommand';
 import { handleEvent } from './handler/handleEvent';
 import Database from '../../totoro/resources/plugins/database/data/database.ts';
-import UsersDB from '../../totoro/resources/plugins/database/user/userDB.ts';
 import ThreadDB from '../../totoro/resources/plugins/database/thread/threadDB.ts';
 
 const database = new Database();
-const usersDB = new UsersDB();
 const threadDB = new ThreadDB();
 
 export async function listener({ api, event }) {
   if (!isConnected) {
     await database.connect();
-    await usersDB.connect();
     await threadDB.connect();
     isConnected = true;
   }
@@ -61,7 +58,6 @@ export async function listener({ api, event }) {
     event,
     cooldown,
     database,
-    usersDB,
     threadDB,
   };
 
