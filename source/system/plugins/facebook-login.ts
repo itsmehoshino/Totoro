@@ -36,7 +36,6 @@ export async function login(fcaOptions?: object) {
       listener({ api, event });
     });
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await discord();
     return api;
   } catch (error) {
     const errorMessage = error.error || error.message || String(error);
