@@ -77,12 +77,12 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
     const isModerator = moderators.includes(senderID);
 
     if (config?.botAdmin && !isAdmin) {
-      await chat.send(fonts.sans('Access denied, you don\'t have rights to use this admin-only command.'));
+      await chat.send('Access denied, you don\'t have rights to use this admin-only command.');
       return;
     }
 
     if (config?.botModerator && !isModerator && !isAdmin) {
-      await chat.send(fonts.sans('Access denied, you don\'t have rights to use this moderator-only command.'));
+      await chat.send('Access denied, you don\'t have rights to use this moderator-only command.');
       return;
     }
 
@@ -98,13 +98,13 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
 
   switch (event.type) {
     case 'message':
-      commandHandler({ ...entryObj });
+      handleCommand({ ...entryObj });
       break;
     case 'event':
-      eventHandler({ ...entryObj });
+      handleEvent({ ...entryObj });
       break;
     case 'message_reply':
-      commandHandler({ ...entryObj });
+      handleCommand({ ...entryObj });
       break;
     default:
       console.log(`Unhandled event type: ${event.type}`);
