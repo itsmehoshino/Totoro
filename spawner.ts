@@ -1,7 +1,9 @@
 import { spawn, ChildProcess } from "child_process";
 import { fileURLToPath } from "url";
+import path from "path";
 
-const __dirname = fileURLToPath(import.meta.url)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function launchProcess(instanceIndex: number): void {
   const childProcess: ChildProcess = spawn(
