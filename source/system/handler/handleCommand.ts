@@ -5,7 +5,7 @@ export async function handleCommand({ api, event }) {
 
   if (!event.body.startsWith(usedPrefix)) return;
 
-  const [commandName, ...args] = event.body.slice(usedPrefix.length).Split(' ');
+  const [commandName, ...args] = event.body.slice(usedPrefix.length).split(' ');
   const command = global.Totoro.commands.get(commandName.toLowerCase());
 
   const chatBox = {
