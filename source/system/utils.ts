@@ -28,7 +28,7 @@ const util = {
     for (const file of loadfiles) {
       const commandPath = join(filePath, file);
       try {
-        const command = await import(commandPath);
+        const command = await import(commandPath).then(mod => mod.default || mod);
         const { meta, execute } = command;
 
         if (!meta) {
