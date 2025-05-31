@@ -1,5 +1,5 @@
 import { log } from "./views/custom";
-import * as fs from "fs-extra";
+import * as fs from "fs";
 import * as path from "path";
 
 const util = {
