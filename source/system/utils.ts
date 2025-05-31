@@ -4,7 +4,7 @@ import * as path from "path";
 
 const util = {
   async loadCommands(): Promise<void> {
-    const filePath = path.resolve(process.cwd(), "../../Totoro/modules/commands");
+    const filePath = path.resolve(process.cwd(), "../../totoro/modules/commands");
     const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
 
     if (loadfiles.length === 0) {
@@ -48,7 +48,7 @@ const util = {
   },
 
   async loadEvents(): Promise<void> {
-    const filePath = path.resolve(process.cwd(), "../../Totoro/modules/events");
+    const filePath = path.resolve(process.cwd(), "../../totoro/modules/events");
     const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
 
     if (loadfiles.length === 0) {
