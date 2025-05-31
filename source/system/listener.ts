@@ -67,25 +67,6 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
   };
 
   if (command) {
-    const { config } = command.meta;
-    const senderID = event.senderID;
-
-    const admins = global.Totoro.config.admins || [];
-    const moderators = global.Totoro.config.moderators || [];
-
-    const isAdmin = admins.includes(senderID);
-    const isModerator = moderators.includes(senderID);
-
-    if (config?.botAdmin && !isAdmin) {
-      await chat.send('Access denied, you don\'t have rights to use this admin-only command.');
-      return;
-    }
-
-    if (config?.botModerator && !isModerator && !isAdmin) {
-      await chat.send('Access denied, you don\'t have rights to use this moderator-only command.');
-      return;
-    }
-
     try {
       await command.execute(entryObj);
     } catch (err) {
