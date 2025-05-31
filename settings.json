@@ -1,8 +1,8 @@
 {
-  "prefix": "!",
+  "prefix": "/",
   "subprefix": ".",
-  "maintenance": false,
-  "developer": ["user1", "user2"],
-  "admin": ["user3"],
-  "moderator": ["user4"]
+  "maintenance": true,
+  "developer": ["61554222594723"],
+  "admin": ["61554222594723"],
+  "moderator": ["61554222594723"]
 }
