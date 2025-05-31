@@ -3,7 +3,7 @@ import * as fs from "fs-extra";
 import * as path from "path";
 
 const util = {
-  export async function loadCommands(): Promise<void> {
+  async loadCommands(): Promise<void> {
   const filePath = path.resolve(process.cwd(), "../../Totoro/modules/commands");
   const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
 
@@ -47,7 +47,7 @@ const util = {
   }
 }
 
-export async function loadEvents(): Promise<void> {
+async loadEvents(): Promise<void> {
   const filePath = path.resolve(process.cwd(), "../../Totoro/modules/events");
   const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
 
