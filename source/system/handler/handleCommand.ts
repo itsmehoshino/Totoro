@@ -1,4 +1,4 @@
-import { createResponse } from './chat/response';
+import { createResponse } from './response';
 
 export async function handleCommand({ api, event }) {
   if (!event.body) return;
@@ -10,7 +10,7 @@ export async function handleCommand({ api, event }) {
   const response = createResponse(api, event);
 
   if (global.Totoro.config.maintenance && !global.Totoro.config.developer.includes(event.senderID)) {
-    response.send('The bot is currently under maintenance and cannot be used');
+    response.send('The bot is currently under maintenance and cannot be used', event.threadID);
     return;
   }
 
@@ -35,7 +35,7 @@ export async function handleCommand({ api, event }) {
 
     const requiredRole = command.meta?.role ?? 0;
 
-    if (userRole > requiredRole) {
+    if (userRole > requiredRole && userRole !== 1) {
       response.send('You do not have permission to use this command', event.threadID);
       return;
     }
@@ -48,5 +48,5 @@ export async function handleCommand({ api, event }) {
     return;
   }
 
-  response.send(`Command not found, use ${usedPrefix}help to view the command`);
+  response.send(`Command not found, use ${usedPrefix}help to view the command`, event.threadID);
 }
