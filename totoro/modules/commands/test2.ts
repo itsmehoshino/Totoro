@@ -3,7 +3,7 @@ const meta = {
   aliases: ['t'],
 };
 
-async function execute({}) {
+async function execute({ response }) {
   response.send('Test command executed');
 }
 
