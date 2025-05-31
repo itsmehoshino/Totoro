@@ -1,11 +1,11 @@
-export async function handleCommand({ api , event }){
+export async function handleCommand({ api, event }) {
   if (!event.body) return;
 
   const usedPrefix = global.Totoro.prefix;
 
   if (!event.body.startsWith(usedPrefix)) return;
 
-  const [commandName, ...args] = event.body.slice(usedPrefix.length).split(' ');
+  const [commandName, ...args] = event.body.slice(usedPrefix.length).Split(' ');
   const command = global.Totoro.commands.get(commandName.toLowerCase());
 
   const chatBox = {
@@ -72,5 +72,5 @@ export async function handleCommand({ api , event }){
     return;
   }
 
-  console.log(`Unknown command: ${commandName}`);
+  response.send(`Command not found, use ${usedPrefix}help to view the command`, event.threadID);
 }
