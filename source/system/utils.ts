@@ -3,38 +3,15 @@ import { readdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-// Define types for commands and events
-interface CommandMeta {
-  name: string;
-  aliases?: string[];
-}
-
-interface EventMeta {
-  name: string;
-}
-
-interface Command {
-  meta: CommandMeta;
-  execute: (...args: any[]) => Promise<void> | void;
-}
-
-interface Event {
-  meta: EventMeta;
-  onEvent: (...args: any[]) => Promise<void> | void;
-}
-
-// Define __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// Base directory for modules (configurable via settings.json)
 const MODULES_DIR = join(__dirname, '..', '..', 'totoro', 'modules');
-const FILE_EXTENSION = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
+const FILE_EXTENSION = '.ts';
 
 const util = {
-  async loadCommands(): Promise<void> {
+  async loadCommands() {
     const filePath = join(MODULES_DIR, 'commands');
-    let loadfiles: string[] = [];
+    let loadfiles = [];
     
     try {
       loadfiles = (await readdir(filePath)).filter((file) => file.endsWith(FILE_EXTENSION));
@@ -51,7 +28,7 @@ const util = {
     for (const file of loadfiles) {
       const commandPath = join(filePath, file);
       try {
-        const command: Command = await import(commandPath);
+        const command = await import(commandPath);
         const { meta, execute } = command;
 
         if (!meta) {
@@ -69,7 +46,6 @@ const util = {
           continue;
         }
 
-        // Check for existing command or alias
         if (global.Totoro.commands.has(meta.name)) {
           log('WARNING', `Command name "${meta.name}" already registered, skipping: ${file}`);
           continue;
@@ -94,9 +70,9 @@ const util = {
     }
   },
 
-  async loadEvents(): Promise<void> {
+  async loadEvents() {
     const filePath = join(MODULES_DIR, 'events');
-    let loadfiles: string[] = [];
+    let loadfiles = [];
 
     try {
       loadfiles = (await readdir(filePath)).filter((file) => file.endsWith(FILE_EXTENSION));
@@ -113,7 +89,7 @@ const util = {
     for (const file of loadfiles) {
       const eventPath = join(filePath, file);
       try {
-        const event: Event = await import(eventPath);
+        const event = await import(eventPath);
         const { meta, onEvent } = event;
 
         if (!meta) {
