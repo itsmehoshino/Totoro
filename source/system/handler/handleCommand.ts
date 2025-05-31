@@ -10,7 +10,7 @@ export async function handleCommand({ api, event }) {
   const response = createResponse(api, event);
 
   if (global.Totoro.config.maintenance && !global.Totoro.config.developer.includes(event.senderID)) {
-    response.send('The bot is currently under maintenance and cannot be used', event.threadID);
+    response.send('The bot is currently under maintenance and cannot be used');
     return;
   }
 
@@ -48,5 +48,5 @@ export async function handleCommand({ api, event }) {
     return;
   }
 
-  response.send(`Command not found, use ${usedPrefix}help to view the command`, event.threadID);
+  response.send(`Command not found, use ${usedPrefix}help to view the command`);
 }
