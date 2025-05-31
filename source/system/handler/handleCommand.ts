@@ -1,4 +1,4 @@
-import { createResponse } from '../chat/response';
+import { createResponse } from './chat/response';
 
 export async function handleCommand({ api, event }) {
   if (!event.body) return;
