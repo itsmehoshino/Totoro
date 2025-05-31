@@ -1,85 +1,84 @@
-import { readdir } from 'fs/promises';
-import { join } from 'path';
-import { log } from './views/custom';
-import url from 'url';
+import { log } from "./views/custom";
+import * as fs from "fs-extra";
+import * as path from "path";
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+export async function loadCommands(): Promise<void> {
+  const filePath = path.resolve(process.cwd(), "../../Totoro/modules/commands");
+  const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
 
-const util = {
-  async loadCommands() {
-    let commandCount = 0;
+  if (loadfiles.length === 0) {
+    log("COMMAND", "No commands available to deploy");
+    return;
+  }
+
+  for (const file of loadfiles) {
+    const commandPath = path.join(filePath, file);
+    const command = require(commandPath);
+    const { meta, execute } = command ?? {};
+
+    if (!meta) {
+      log("WARNING", `Missing 'meta' for the command: ${file}`);
+      continue;
+    }
+
+    if (typeof execute !== "function") {
+      log("WARNING", `Invalid 'execute' function for the command: ${file}`);
+      continue;
+    }
+
     try {
-      const commandsDir = join(__dirname, '..', '..', 'totoro', 'modules', 'commands');
-      const files = await readdir(commandsDir);
-      for (const file of files.filter(f => f.endsWith('.ts') || f.endsWith('.js'))) {
-        try {
-          const command = (await import(join(commandsDir, file))).default;
-          if (!command) {
-            log('FAILED', `No default export in command file: ${file}, please open your code`);
-            continue;
-          }
-          if (!command.meta) {
-            log('FAILED', `Missing 'meta' property in command file: ${file}, please open your code`);
-            continue;
-          }
-          if (!command.meta.name) {
-            log('FAILED', `Missing 'meta.name' property in command file: ${file}, please open your code`);
-            continue;
-          }
-          if (!command.execute || typeof command.execute !== 'function') {
-            log('FAILED', `Missing or invalid 'execute' property in command file: ${file}, please open your code`);
-            continue;
-          }
-          global.Totoro.commands.set(command.meta.name, command);
-          for (const alias of command.meta.aliases || []) {
+      if (meta.name) {
+        log("COMMAND", `Deployed ${meta.name} successfully`);
+        global.Totoro.commands.set(meta.name, command);
+
+        if (Array.isArray(meta.aliases)) {
+          for (const alias of meta.aliases) {
             global.Totoro.commands.set(alias, command);
+            log("ALIASES", `Alias "${alias}" registered for command "${meta.name}"`);
           }
-          commandCount++;
-          log('COMMANDS', `Loaded command: ${command.meta.name} (Category: ${command.meta.category})`);
-        } catch (error) {
-          log('FAILED', `Error loading command file ${file}: ${error.message}`);
         }
-      }
-      if (commandCount === 0) {
-        log('SYSTEM', 'No commands loaded');
       } else {
-        log('SYSTEM', `Successfully loaded ${commandCount} commands`);
+        log("WARNING", `Meta missing 'name' for the command: ${file}`);
       }
     } catch (error) {
-      log('ERROR', `Failed to load commands: ${error.message}`);
-      throw error;
+      log("ERROR", `Failed to deploy ${meta.name}: ${(error as Error).stack}`);
     }
-  },
+  }
+}
 
-  async loadEvents() {
-    let eventCount = 0;
+export async function loadEvents(): Promise<void> {
+  const filePath = path.resolve(process.cwd(), "../../Totoro/modules/events");
+  const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
+
+  if (loadfiles.length === 0) {
+    log("EVENT", "No events available to deploy");
+    return;
+  }
+
+  for (const file of loadfiles) {
+    const eventPath = path.join(filePath, file);
+    const event = require(eventPath);
+    const { meta, onEvent } = event ?? {};
+
+    if (!meta) {
+      log("WARNING", `Missing 'meta' for the event: ${file}`);
+      continue;
+    }
+
+    if (typeof onEvent !== "function") {
+      log("WARNING", `Missing 'onEvent' function for the event: ${file}`);
+      continue;
+    }
+
     try {
-      const eventsDir = join(__dirname, '..', '..', 'totoro', 'modules', 'events');
-      const files = await readdir(eventsDir);
-      for (const file of files.filter(f => f.endsWith('.ts') || f.endsWith('.js'))) {
-        try {
-          const event = (await import(join(eventsDir, file))).default;
-          if (!event || !event.name || typeof event.execute !== 'function') {
-            log('FAILED', `Invalid event file: ${file}, please open your code`);
-            continue;
-          }
-          global.Totoro.events.set(event.name, event);
-          eventCount++;
-          log('EVENTS', `Loaded event: ${event.name}`);
-        } catch (error) {
-          log('FAILED', `Error loading event file ${file}: ${error.message}`);
-        }
-      }
-      if (eventCount === 0) {
-        log('SYSTEM', 'No events loaded');
+      if (meta.name) {
+        log("COMMAND", `Deployed ${meta.name} successfully.`);
+        global.Totoro.events.set(meta.name, event);
       } else {
-        log('SYSTEM', `Successfully loaded ${global.Totoro.events.size} events`);
+        log('ERROR', `Meta missing 'name' for the event: ${file}`);
       }
     } catch (error) {
-      log('ERROR', `Failed to load events: ${error.message}`);
-      throw error;
+      log('ERROR', `Failed to deploy ${file}: ${(error as Error).stack}`);
     }
-  },
-};
-
-export default util;
+  }
+}
