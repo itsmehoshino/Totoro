@@ -7,7 +7,8 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
       api,
       event,
     }
-  
+
+  switch (event.type){
     case 'message':
       handleCommand({ ...entryObj });
       break;
@@ -19,5 +20,6 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
       break;
     default:
       console.log(`Unhandled event type: ${event.type}`);
+  }
 }
 
