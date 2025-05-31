@@ -2,7 +2,8 @@ import { log } from "./views/custom";
 import * as fs from "fs-extra";
 import * as path from "path";
 
-export async function loadCommands(): Promise<void> {
+const util = {
+  export async function loadCommands(): Promise<void> {
   const filePath = path.resolve(process.cwd(), "../../Totoro/modules/commands");
   const loadfiles = fs.readdirSync(filePath).filter((file) => file.endsWith(".ts"));
 
@@ -82,3 +83,5 @@ export async function loadEvents(): Promise<void> {
     }
   }
 }
+
+export default util;
