@@ -17,15 +17,6 @@ export class Response {
     }
   }
 
-  async reply(message, goal) {
-    try {
-      await this.sendMessage(message, this.event.messageID, goal || this.event.threadID);
-      return true;
-    } catch (err) {
-      throw err;
-    }
-  }
-
   async edit(msg, mid) {
     try {
       await this.editMessage(msg, mid);
