@@ -1,4 +1,4 @@
-import { log } from '../views/custom';
+import { log } from './views/custom';
 import { handleEvent } from './handler/handleEvent';
 import { handleCommand } from './handler/handleCommand';
 import { handleReply } from './handler/handleReply';
