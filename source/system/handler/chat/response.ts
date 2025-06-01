@@ -4,32 +4,34 @@ export class Response {
   constructor(api, event) {
     this.api = api;
     this.event = event;
+    this.sendMessage = promisify(api.sendMessage.bind(api));
+    this.editMessage = promisify(api.editMessage.bind(api));
   }
 
-  send(message, goal) {
-    return new Promise((res, rej) => {
-      this.api.sendMessage(message, goal || this.event.threadID, (err) => {
-        if (err) rej(err);
-        else res(true);
-      });
-    });
+  async send(message, goal) {
+    try {
+      await this.sendMessage(message, goal || this.event.threadID);
+      return true;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  reply(message, goal) {
-    return new Promise((res, rej) => {
-      this.api.sendMessage(message, this.event.messageID, goal || this.event.threadID, (err) => {
-        if (err) rej(err);
-        else res(true);
-      });
-    });
+  async reply(message, goal) {
+    try {
+      await this.sendMessage(message, this.event.messageID, goal || this.event.threadID);
+      return true;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  edit(msg, mid) {
-    return new Promise((res, rej) => {
-      this.api.editMessage(msg, mid, (err) => {
-        if (err) rej(err);
-        else res(true);
-      });
-    });
+  async edit(msg, mid) {
+    try {
+      await this.editMessage(msg, mid);
+      return true;
+    } catch (err) {
+      throw err;
+    }
   }
 }
