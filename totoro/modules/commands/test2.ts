@@ -4,7 +4,7 @@ const meta = {
 };
 
 async function execute({ response }) {
-  response.send('Test command executed');
+  response.reply('Test command executed');
 }
 
 export default { meta, execute };
