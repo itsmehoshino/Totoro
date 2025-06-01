@@ -1,5 +1,5 @@
 import { promisify } from 'util';
-import { log } from '../../../views/custom';
+import { log } from '../../views/custom';
 
 export class Response {
   private api;
