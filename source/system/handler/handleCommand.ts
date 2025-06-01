@@ -3,9 +3,17 @@ import { createResponse } from './chat/response';
 export async function handleCommand({ api, event }) {
   if (!event.body) return;
 
-  const usedPrefix = global.Totoro.prefix;
+  const mainPrefix = global.Totoro.prefix;
+  const subPrefix = global.Totoro.config.subprefix || '';
+  let usedPrefix = '';
 
-  if (!event.body.startsWith(usedPrefix)) return;
+  if (event.body.startsWith(mainPrefix)) {
+    usedPrefix = mainPrefix;
+  } else if (subPrefix && event.body.startsWith(subPrefix)) {
+    usedPrefix = subPrefix;
+  } else {
+    return;
+  }
 
   const response = createResponse(api, event);
 
@@ -48,5 +56,5 @@ export async function handleCommand({ api, event }) {
     return;
   }
 
-  response.send(`Command not found, use ${usedPrefix}help to view the command`, event.threadID);
+  response.send(`Command not found, use ${mainPrefix}help to view the command`, event.threadID);
 }
