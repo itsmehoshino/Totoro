@@ -1,4 +1,4 @@
-import { createResponse } from './chat/response';
+import { Response } from './chat/response';
 
 export async function handleCommand({ api, event }) {
   if (!event.body) return;
@@ -15,7 +15,7 @@ export async function handleCommand({ api, event }) {
     return;
   }
 
-  const response = createResponse(api, event);
+  const response = Response(api, event);
 
   if (global.Totoro.config.maintenance && !global.Totoro.config.developer.includes(event.senderID)) {
     response.send('The bot is currently under maintenance and cannot be used', event.threadID);
