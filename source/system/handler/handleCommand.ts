@@ -15,7 +15,7 @@ export async function handleCommand({ api, event }) {
     return;
   }
 
-  const response = Response(api, event);
+  const response = new Response(api, event);
 
   if (global.Totoro.config.maintenance && !global.Totoro.config.developer.includes(event.senderID)) {
     response.send('The bot is currently under maintenance and cannot be used', event.threadID);
