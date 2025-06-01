@@ -1,4 +1,4 @@
-import { log } from '../../views/custom';
+import { log } from '../views/custom';
 import { Response } from './chat/response';
 
 export async function handleReply({ api, event }) {
