@@ -1,5 +1,6 @@
 import { handleEvent } from './handler/handleEvent';
 import { handleCommand } from './handler/handleCommand';
+import { handleReply } from './handler/handleReply';
 
 export async function listener({ api, event }: { api: any; event: any }): Promise<void> {
 
@@ -17,6 +18,7 @@ export async function listener({ api, event }: { api: any; event: any }): Promis
       break;
     case 'message_reply':
       handleCommand({ ...entryObj });
+      handleReply({ ...entryObj });
       break;
     default:
       console.log(`Unhandled event type: ${event.type}`);
