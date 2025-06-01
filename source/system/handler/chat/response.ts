@@ -19,6 +19,18 @@ export function createResponse(api, event) {
         });
       });
     },
+    reply: (message: string, goal?: string): Promise<boolean> => {
+      return new Promise((res, rej) => {
+        api.sendMessage(
+          { body: message, replyToMessage: event.messageID },
+          goal || event.threadID,
+          (err: any) => {
+            if (err) rej(err);
+            else res(true);
+          }
+        );
+      });
+    },
     edit: (msg: string, mid: string): Promise<boolean> => {
       return new Promise((res, rej) => {
         api.editMessage(msg, mid, (err: any) => {
