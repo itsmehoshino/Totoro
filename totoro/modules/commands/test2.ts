@@ -4,7 +4,10 @@ const meta = {
 };
 
 async function execute({ response }) {
-  response.send('Test command executed');
+  const info = await response.setReply("mismo?");
+   info.replies(({ response }) => {
+    response.reply("misskaba?");
+  });
 }
 
 export default { meta, execute };
