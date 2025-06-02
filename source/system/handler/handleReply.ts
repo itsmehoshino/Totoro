@@ -13,7 +13,6 @@ export async function handleReply({ api, event }) {
   const replyCallback = global.Totoro.replies.get(repliedMessageID);
   if (!replyCallback) {
     log('INFO', `No reply handler found for message ID: ${repliedMessageID}`);
-    response.send('This reply is not recognized. Please try again or use a command.', event.threadID);
     return;
   }
 
