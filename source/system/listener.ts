@@ -18,11 +18,7 @@ export async function listener({ api, event }) {
         await handleEvent({ api, event });
         break;
       case 'message_reply':
-        if (event.body?.startsWith(global.Totoro.config.prefix)) {
-          await handleCommand({ api, event });
-        } else if (event.messageReply?.messageID && global.Totoro.replies.has(event.messageReply.messageID)) {
-          await handleReply({ api, event });
-        }
+        await handleReply({ api, event });
         break;
       default:
         log('WARNING', `Unhandled event type: ${event.type}`);
