@@ -1,7 +1,14 @@
 {
+  "fcaOptions": {
+    "listenEvents": true,
+    "selfListen": false,
+    "forceLogin": true,
+    "autoReconnect": false,
+    "autoMarkDelivery": true
+  },
   "prefix": "/",
   "subprefix": ".",
-  "maintenance": true,
+  "maintenance": false,
   "developer": ["61554222594723"],
   "admin": ["61554222594723"],
   "moderator": ["61554222594723"]

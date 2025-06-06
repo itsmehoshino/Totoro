@@ -12,7 +12,7 @@ import fca from "facebook-chat-api";
 fca.logging(false);
 const loginPromisified = promisify(fca.login);
 
-export async function login(fcaOptions?: object) {
+export async function login() {
   try {
     log("FACEBOOK", "Logging in...");
     const cookiesPath = join(__dirname, "..", "..", "..", "cookies.json");
@@ -23,10 +23,22 @@ export async function login(fcaOptions?: object) {
     if (Array.isArray(appState) && appState.length === 0) {
       throw new Error("No Appstate provided");
     }
-    const api = await loginPromisified({ appState });
-    if (fcaOptions) {
-      api.setOptions(fcaOptions);
-    }
+    const config = global.Totoro?.config || {
+      fcaOptions: {
+        listenEvents: true,
+        forceLogin: false,
+        selfListen: false,
+        autoReconnect: true,
+        autoMarkDelivery: true,
+      },
+    };
+    const api = await loginPromisified({ appState }, {
+      listenEvents: config.fcaOptions.listenEvents,
+      forceLogin: config.fcaOptions.forceLogin,
+      selfListen: config.fcaOptions.selfListen,
+      autoReconnect: config.fcaOptions.autoReconnect,
+      autoMarkDelivery: config.fcaOptions.autoMarkDelivery,
+    });
     api.listenMqtt((err, event) => {
       if (err) {
         const errorMessage = err.error || err.message || String(err);

@@ -4,7 +4,6 @@ import { fileURLToPath } from 'url';
 import { log } from './system/views/custom';
 import { starter } from './system/views/starter';
 
-// Define __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
