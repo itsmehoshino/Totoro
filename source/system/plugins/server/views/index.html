@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Totoro Industries</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --forest-green: #4a7043;
+      --light-green: #a8d5ba;
+      --soft-white: #fefefe;
+      --sky-blue: #d0e8f2;
+      --text-dark: #2e2e2e;
+      --text-light: #666;
+      --accent: #4a7043;
+    }body {
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background-color: var(--soft-white);
+  color: var(--text-dark);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background: var(--light-green);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.menu-icon {
+  font-size: 28px;
+  cursor: pointer;
+  margin-right: 15px;
+  color: var(--forest-green);
+}
+
+.brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.7em;
+  color: var(--forest-green);
+  display: flex;
+  align-items: center;
+}
+
+.brand .material-icons {
+  margin-right: 8px;
+}
+
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--forest-green);
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 60px;
+  z-index: 11;
+}
+
+.sidebar a {
+  padding: 12px 30px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.sidebar a .material-icons {
+  margin-right: 12px;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.4);
+  transition: 0.3s;
+  z-index: 9;
+}
+
+.content {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8em;
+  margin-bottom: 10px;
+  color: var(--forest-green);
+}
+
+p.lead {
+  font-size: 1.2em;
+  color: var(--text-light);
+  margin-bottom: 40px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 25px;
+  margin: 20px auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  max-width: 600px;
+  text-align: left;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h2 {
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.card h2 .material-icons {
+  margin-right: 10px;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 15px;
+  background: linear-gradient(to right, #4a7043, #6fae75);
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+  </style>
+</head>
+<body>  <div class="header">
+    <span class="material-icons menu-icon" onclick="openSidebar()">menu</span>
+    <div class="brand">
+      <span class="material-icons">eco</span>
+      Totoro Industries
+    </div>
+  </div>  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" onclick="closeSidebar()"><span class="material-icons">close</span> Close</a>
+    <a href="#home"><span class="material-icons">home</span> Home</a>
+    <a href="#about"><span class="material-icons">info</span> About</a>
+    <a href="#contact"><span class="material-icons">contact_mail</span> Contact</a>
+  </div>  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>  <div class="content">
+    <h1>Welcome to Totoro Industries</h1>
+    <p class="lead">Where technology meets the forest spirit's charm in harmony.</p><div class="card">
+  <h2><span class="material-icons">nature</span> Inspired by Nature</h2>
+  <p>We bring the serenity and creativity of Studio Ghibli into the heart of every project—thoughtful, beautiful, and magical.</p>
+  <a href="#" class="button">Explore</a>
+</div>
+
+<div class="card">
+  <h2><span class="material-icons">auto_awesome</span> Whimsy Meets Innovation</h2>
+  <p>Our tools and services are crafted to feel like spells—powerful yet intuitive, backed by modern tech but wrapped in fantasy.</p>
+  <a href="#" class="button">Discover More</a>
+</div>
+
+  </div>  <script>
+    function openSidebar() {
+      document.getElementById("mySidebar").style.width = "250px";
+      document.getElementById("overlay").style.width = "100%";
+    }
+    function closeSidebar() {
+      document.getElementById("mySidebar").style.width = "0";
+      document.getElementById("overlay").style.width = "0";
+    }
+  </script></body>
+</html>

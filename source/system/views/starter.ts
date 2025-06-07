@@ -3,9 +3,17 @@ import { login } from '../plugins/facebook-login';
 import util from '../utils';
 import express from 'express';
 import totoro from '../plugins/auto-totoro';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = fileURLToPath(import.meta.url);
 
 const app = express();
+app.use(express.static("public"));
 app.use("", totoro);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../plugins/server/views', 'index.html'));
+});
 
 export async function starter(){
   console.clear();
