@@ -7,26 +7,27 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     :root {
-      --forest-green: #4a7043;
-      --light-green: #a8d5ba;
-      --soft-white: #fefefe;
-      --sky-blue: #d0e8f2;
-      --text-dark: #2e2e2e;
-      --text-light: #666;
-      --accent: #4a7043;
+      --aqua: #7fdfff;
+      --space-dark: #0a0f1d;
+      --star-yellow: #ffe066;
+      --white: #fefefe;
+      --text-light: #ddd;
+      --accent: #4dd0e1;
+      --button-gradient: linear-gradient(135deg, #4dd0e1, #9575cd);
     }body {
   margin: 0;
   font-family: 'Quicksand', sans-serif;
-  background-color: var(--soft-white);
-  color: var(--text-dark);
+  background: linear-gradient(120deg, #0a0f1d, #1e2a38);
+  color: var(--text-light);
+  overflow-x: hidden;
 }
 
 .header {
   display: flex;
   align-items: center;
   padding: 15px 20px;
-  background: var(--light-green);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: rgba(10, 15, 29, 0.85);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -36,13 +37,13 @@
   font-size: 28px;
   cursor: pointer;
   margin-right: 15px;
-  color: var(--forest-green);
+  color: var(--aqua);
 }
 
 .brand {
   font-family: 'DM Serif Display', serif;
   font-size: 1.7em;
-  color: var(--forest-green);
+  color: var(--aqua);
   display: flex;
   align-items: center;
 }
@@ -57,7 +58,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: var(--forest-green);
+  background-color: var(--space-dark);
   overflow-x: hidden;
   transition: 0.3s;
   padding-top: 60px;
@@ -68,7 +69,7 @@
   padding: 12px 30px;
   display: flex;
   align-items: center;
-  color: #fff;
+  color: var(--aqua);
   font-size: 1.1em;
   text-decoration: none;
   transition: 0.3s;
@@ -88,7 +89,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.5);
   transition: 0.3s;
   z-index: 9;
 }
@@ -104,7 +105,7 @@ h1 {
   font-family: 'DM Serif Display', serif;
   font-size: 2.8em;
   margin-bottom: 10px;
-  color: var(--forest-green);
+  color: var(--aqua);
 }
 
 p.lead {
@@ -114,22 +115,24 @@ p.lead {
 }
 
 .card {
-  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
   padding: 25px;
   margin: 20px auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
   max-width: 600px;
   text-align: left;
-  transition: transform 0.2s;
+  transition: transform 0.2s, background 0.3s;
+  backdrop-filter: blur(10px);
 }
 
 .card:hover {
   transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .card h2 {
-  color: var(--accent);
+  color: var(--aqua);
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -143,7 +146,7 @@ p.lead {
   display: inline-block;
   padding: 10px 20px;
   margin-top: 15px;
-  background: linear-gradient(to right, #4a7043, #6fae75);
+  background: var(--button-gradient);
   color: white;
   border-radius: 30px;
   text-decoration: none;
@@ -155,7 +158,7 @@ p.lead {
 <body>  <div class="header">
     <span class="material-icons menu-icon" onclick="openSidebar()">menu</span>
     <div class="brand">
-      <span class="material-icons">eco</span>
+      <span class="material-icons">auto_awesome</span>
       Totoro Industries
     </div>
   </div>  <div id="mySidebar" class="sidebar">
@@ -163,20 +166,32 @@ p.lead {
     <a href="#home"><span class="material-icons">home</span> Home</a>
     <a href="#about"><span class="material-icons">info</span> About</a>
     <a href="#contact"><span class="material-icons">contact_mail</span> Contact</a>
-  </div>  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>  <div class="content">
+  </div>  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>  <div class="content" id="home">
     <h1>Welcome to Totoro Industries</h1>
-    <p class="lead">Where technology meets the forest spirit's charm in harmony.</p><div class="card">
-  <h2><span class="material-icons">nature</span> Inspired by Nature</h2>
-  <p>We bring the serenity and creativity of Studio Ghibli into the heart of every project—thoughtful, beautiful, and magical.</p>
+    <p class="lead">Where technology meets cosmic wonder and forest spirit's charm in harmony.</p><div class="card">
+  <h2><span class="material-icons">stars</span> Inspired by Nature & Cosmos</h2>
+  <p>We blend the serenity of Studio Ghibli with celestial magic—crafting beautiful, dreamlike experiences that transcend the ordinary.</p>
   <a href="#" class="button">Explore</a>
 </div>
 
 <div class="card">
-  <h2><span class="material-icons">auto_awesome</span> Whimsy Meets Innovation</h2>
-  <p>Our tools and services are crafted to feel like spells—powerful yet intuitive, backed by modern tech but wrapped in fantasy.</p>
+  <h2><span class="material-icons">auto_awesome</span> Fantasy Meets Innovation</h2>
+  <p>Our tools are enchanted—infused with imagination and powered by advanced design and intuitive usability.</p>
   <a href="#" class="button">Discover More</a>
 </div>
 
+  </div>  <div class="content" id="about">
+    <div class="card">
+      <h2><span class="material-icons">info</span> About Totoro Industries</h2>
+      <p>Totoro Industries is inspired by the whimsical spirit of Studio Ghibli and the mysteries of the cosmos. Our team creates emotionally resonant digital products designed to inspire wonder, reflection, and a touch of stardust in everyday life.</p>
+    </div>
+  </div>  <div class="content" id="contact">
+    <div class="card">
+      <h2><span class="material-icons">contact_mail</span> Contact Us</h2>
+      <p>If you would like to connect with our team or inquire about our cosmic endeavors, we’d love to hear from you.</p>
+      <p><strong>Email:</strong> hello@totoroindustries.com</p>
+      <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+    </div>
   </div>  <script>
     function openSidebar() {
       document.getElementById("mySidebar").style.width = "250px";
