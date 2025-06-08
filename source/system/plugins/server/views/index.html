@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Totoro Industries</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -14,192 +15,237 @@
       --text-light: #ddd;
       --accent: #4dd0e1;
       --button-gradient: linear-gradient(135deg, #4dd0e1, #9575cd);
-    }body {
-  margin: 0;
-  font-family: 'Quicksand', sans-serif;
-  background: linear-gradient(120deg, #0a0f1d, #1e2a38);
-  color: var(--text-light);
-  overflow-x: hidden;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  background: rgba(10, 15, 29, 0.85);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.menu-icon {
-  font-size: 28px;
-  cursor: pointer;
-  margin-right: 15px;
-  color: var(--aqua);
-}
-
-.brand {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.7em;
-  color: var(--aqua);
-  display: flex;
-  align-items: center;
-}
-
-.brand .material-icons {
-  margin-right: 8px;
-}
-
-.sidebar {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: var(--space-dark);
-  overflow-x: hidden;
-  transition: 0.3s;
-  padding-top: 60px;
-  z-index: 11;
-}
-
-.sidebar a {
-  padding: 12px 30px;
-  display: flex;
-  align-items: center;
-  color: var(--aqua);
-  font-size: 1.1em;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.sidebar a .material-icons {
-  margin-right: 12px;
-}
-
-.sidebar a:hover {
-  background-color: rgba(255,255,255,0.1);
-}
-
-.overlay {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(0,0,0,0.5);
-  transition: 0.3s;
-  z-index: 9;
-}
-
-.content {
-  padding: 40px 20px;
-  max-width: 900px;
-  margin: auto;
-  text-align: center;
-}
-
-h1 {
-  font-family: 'DM Serif Display', serif;
-  font-size: 2.8em;
-  margin-bottom: 10px;
-  color: var(--aqua);
-}
-
-p.lead {
-  font-size: 1.2em;
-  color: var(--text-light);
-  margin-bottom: 40px;
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 25px;
-  margin: 20px auto;
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
-  max-width: 600px;
-  text-align: left;
-  transition: transform 0.2s, background 0.3s;
-  backdrop-filter: blur(10px);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.card h2 {
-  color: var(--aqua);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.card h2 .material-icons {
-  margin-right: 10px;
-}
-
-.button {
-  display: inline-block;
-  padding: 10px 20px;
-  margin-top: 15px;
-  background: var(--button-gradient);
-  color: white;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-}
-
+    }
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(120deg, #0a0f1d, #1e2a38);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(10, 15, 29, 0.85);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .menu-icon {
+      font-size: 28px;
+      cursor: pointer;
+      margin-right: 15px;
+      color: var(--aqua);
+    }
+    .brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.7em;
+      color: var(--aqua);
+      display: flex;
+      align-items: center;
+    }
+    .brand .material-icons {
+      margin-right: 8px;
+    }
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: var(--space-dark);
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 11;
+    }
+    .sidebar a {
+      padding: 12px 30px;
+      display: flex;
+      align-items: center;
+      color: var(--aqua);
+      font-size: 1.1em;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .sidebar a .material-icons {
+      margin-right: 12px;
+    }
+    .sidebar a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .overlay {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: rgba(0,0,0,0.5);
+      transition: 0.3s;
+      z-index: 9;
+    }
+    .content {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.8em;
+      margin-bottom: 10px;
+      color: var(--aqua);
+    }
+    p.lead {
+      font-size: 1.2em;
+      color: var(--text-light);
+      margin-bottom: 40px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 20px auto;
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+      max-width: 600px;
+      text-align: left;
+      transition: transform 0.2s, background 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .card h2 {
+      color: var(--aqua);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .card h2 .material-icons {
+      margin-right: 10px;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 15px;
+      background: var(--button-gradient);
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+    }
   </style>
 </head>
-<body>  <div class="header">
-    <span class="material-icons menu-icon" onclick="openSidebar()">menu</span>
-    <div class="brand">
-      <span class="material-icons">auto_awesome</span>
-      Totoro Industries
-    </div>
-  </div>  <div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" onclick="closeSidebar()"><span class="material-icons">close</span> Close</a>
-    <a href="#home"><span class="material-icons">home</span> Home</a>
-    <a href="#about"><span class="material-icons">info</span> About</a>
-    <a href="#contact"><span class="material-icons">contact_mail</span> Contact</a>
-  </div>  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>  <div class="content" id="home">
-    <h1>Welcome to Totoro Industries</h1>
-    <p class="lead">Where technology meets cosmic wonder and forest spirit's charm in harmony.</p><div class="card">
-  <h2><span class="material-icons">stars</span> Inspired by Nature & Cosmos</h2>
-  <p>We blend the serenity of Studio Ghibli with celestial magic—crafting beautiful, dreamlike experiences that transcend the ordinary.</p>
-  <a href="#" class="button">Explore</a>
+<body>
+
+<div class="header">
+  <span class="material-icons menu-icon" onclick="openSidebar()">menu</span>
+  <div class="brand">
+    <span class="material-icons">auto_awesome</span>
+    Totoro Industries
+  </div>
 </div>
 
-<div class="card">
-  <h2><span class="material-icons">auto_awesome</span> Fantasy Meets Innovation</h2>
-  <p>Our tools are enchanted—infused with imagination and powered by advanced design and intuitive usability.</p>
-  <a href="#" class="button">Discover More</a>
+<div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" onclick="closeSidebar()"><span class="material-icons">close</span> Close</a>
+  <a href="javascript:void(0);" onclick="navigateTo('home')"><span class="material-icons">home</span> Home</a>
+  <a href="javascript:void(0);" onclick="navigateTo('about')"><span class="material-icons">info</span> About</a>
+  <a href="javascript:void(0);" onclick="navigateTo('contact')"><span class="material-icons">contact_mail</span> Contact</a>
+  <a href="javascript:void(0);" onclick="toggleServiceMenu()" style="padding-left: 30px;">
+    <span class="material-icons" style="vertical-align: middle;">miscellaneous_services</span> Services
+  </a>
+  <div id="serviceSubmenu" style="display: none; padding-left: 60px;">
+    <a href="javascript:void(0);" onclick="loadServices('educational')">Educational</a>
+    <a href="javascript:void(0);" onclick="loadServices('character')">Character</a>
+    <a href="javascript:void(0);" onclick="loadServices('custom')">Custom</a>
+  </div>
 </div>
 
-  </div>  <div class="content" id="about">
-    <div class="card">
-      <h2><span class="material-icons">info</span> About Totoro Industries</h2>
-      <p>Totoro Industries is inspired by the whimsical spirit of Studio Ghibli and the mysteries of the cosmos. Our team creates emotionally resonant digital products designed to inspire wonder, reflection, and a touch of stardust in everyday life.</p>
-    </div>
-  </div>  <div class="content" id="contact">
-    <div class="card">
-      <h2><span class="material-icons">contact_mail</span> Contact Us</h2>
-      <p>If you would like to connect with our team or inquire about our cosmic endeavors, we’d love to hear from you.</p>
-      <p><strong>Email:</strong> hello@totoroindustries.com</p>
-      <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-    </div>
-  </div>  <script>
-    function openSidebar() {
-      document.getElementById("mySidebar").style.width = "250px";
-      document.getElementById("overlay").style.width = "100%";
-    }
-    function closeSidebar() {
-      document.getElementById("mySidebar").style.width = "0";
-      document.getElementById("overlay").style.width = "0";
-    }
-  </script></body>
+<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+
+<div class="content" id="home">
+  <h1>Welcome to Totoro Industries</h1>
+  <p class="lead">Where technology meets cosmic wonder and forest spirit's charm in harmony.</p>
+  <div class="card">
+    <h2><span class="material-icons">stars</span> Inspired by Nature & Cosmos</h2>
+    <p>We blend the serenity of Studio Ghibli with celestial magic—crafting beautiful, dreamlike experiences that transcend the ordinary.</p>
+    <a href="#" class="button">Explore</a>
+  </div>
+  <div class="card">
+    <h2><span class="material-icons">auto_awesome</span> Fantasy Meets Innovation</h2>
+    <p>Our tools are enchanted—infused with imagination and powered by advanced design and intuitive usability.</p>
+    <a href="#" class="button">Discover More</a>
+  </div>
+</div>
+
+<div class="content" id="about" style="display: none;">
+  <div class="card">
+    <h2><span class="material-icons">info</span> About Totoro Industries</h2>
+    <p>Totoro Industries is inspired by the whimsical spirit of Studio Ghibli and the mysteries of the cosmos. Our team creates emotionally resonant digital products designed to inspire wonder, reflection, and a touch of stardust in everyday life.</p>
+  </div>
+</div>
+
+<div class="content" id="contact" style="display: none;">
+  <div class="card">
+    <h2><span class="material-icons">contact_mail</span> Contact Us</h2>
+    <p>If you would like to connect with our team or inquire about our cosmic endeavors, we’d love to hear from you.</p>
+    <p><strong>Email:</strong> hello@totoroindustries.com</p>
+    <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+  </div>
+</div>
+
+<div class="content" id="services-section" style="display: none;">
+  <h1 id="services-title">Our Services</h1>
+  <div id="services-container"></div>
+</div>
+
+<script>
+  function openSidebar() {
+    document.getElementById("mySidebar").style.width = "250px";
+    document.getElementById("overlay").style.width = "100%";
+  }
+  function closeSidebar() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("overlay").style.width = "0";
+  }
+  function toggleServiceMenu() {
+    const submenu = document.getElementById("serviceSubmenu");
+    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+  }
+  function navigateTo(sectionId) {
+    document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+    const section = document.getElementById(sectionId);
+    if (section) section.style.display = 'block';
+    closeSidebar();
+  }
+  function loadServices(category) {
+    document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+    document.getElementById("services-section").style.display = "block";
+    const container = document.getElementById("services-container");
+    container.innerHTML = '<p>Loading services...</p>';
+    fetch(`${category}.json`)
+      .then(res => res.json())
+      .then(data => {
+        container.innerHTML = '';
+        data.services.forEach(service => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h2><span class="material-icons">${service.icon}</span> ${service.title}</h2>
+            <p>${service.description}</p>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        container.innerHTML = '<p>Error loading services. Please try again later.</p>';
+      });
+    closeSidebar();
+  }
+</script>
+
+</body>
 </html>
