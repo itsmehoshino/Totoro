@@ -1,19 +1,7 @@
 import { log } from './custom';
 import { login } from '../plugins/facebook-login';
 import util from '../utils';
-import express from 'express';
-import totoro from '../plugins/auto-totoro';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = fileURLToPath(import.meta.url);
-
-const app = express();
-app.use(express.static("public"));
-app.use("", totoro);
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../plugins/server/views', 'index.html'));
-});
+import { server } from '../plugins/server/server';
 
 export async function starter(){
   console.clear();
@@ -34,7 +22,6 @@ export async function starter(){
   await login();
   log("NOTE", "This is a beta version, please report any bugs to the developer.");
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  app.listen(3000, () => {
-    log("SYSTEM", "Totoro is now online and ready to use!");
-  })
+  log("SERVER", "Starting server...");
+  await server();
 }
