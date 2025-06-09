@@ -27,8 +27,8 @@
       display: flex;
       align-items: center;
       padding: 15px 20px;
-      background: rgba(10, 15, 29, 0.85);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      background: rgba(10, 15, 29, 0.95);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -61,7 +61,7 @@
       padding-top: 60px;
       z-index: 11;
     }
-    .sidebar a {
+    .sidebar a, .sidebar .services-toggle {
       padding: 12px 30px;
       display: flex;
       align-items: center;
@@ -69,12 +69,23 @@
       font-size: 1.1em;
       text-decoration: none;
       transition: 0.3s;
+      cursor: pointer;
     }
-    .sidebar a .material-icons {
+    .sidebar a .material-icons, .services-toggle .material-icons {
       margin-right: 12px;
     }
-    .sidebar a:hover {
+    .sidebar a:hover, .services-toggle:hover {
       background-color: rgba(255,255,255,0.1);
+    }
+    .submenu {
+      display: none;
+      flex-direction: column;
+      padding-left: 30px;
+      animation: fadeIn 0.3s ease;
+    }
+    .submenu a {
+      padding-left: 42px;
+      font-size: 1em;
     }
     .overlay {
       height: 100%;
@@ -91,6 +102,7 @@
       max-width: 900px;
       margin: auto;
       text-align: center;
+      animation: fadeIn 0.5s ease;
     }
     h1 {
       font-family: 'DM Serif Display', serif;
@@ -108,7 +120,7 @@
       border-radius: 20px;
       padding: 25px;
       margin: 20px auto;
-      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       max-width: 600px;
       text-align: left;
       transition: transform 0.2s, background 0.3s;
@@ -136,116 +148,245 @@
       border-radius: 30px;
       text-decoration: none;
       font-weight: 600;
+      cursor: pointer;
+    }
+    #custom-alert {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 25, 40, 0.95);
+      color: var(--aqua);
+      border: 2px solid var(--aqua);
+      padding: 14px 22px;
+      border-radius: 12px;
+      display: none;
+      align-items: center;
+      font-weight: bold;
+      z-index: 100;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+      animation: fadeInOut 2s ease forwards;
+    }
+    #custom-alert .material-icons {
+      font-size: 24px;
+      margin-right: 10px;
+      color: var(--aqua);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, 20px); }
+      10% { opacity: 1; transform: translate(-50%, 0); }
+      90% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, 20px); }
+    }
+    #chat-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--button-gradient);
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+    #chat-box {
+      position: fixed;
+      bottom: 90px;
+      right: -400px;
+      width: 350px;
+      height: 400px;
+      background: #121e2a;
+      color: var(--text-light);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      transition: 0.4s ease;
+      z-index: 21;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    #chat-box.open {
+      right: 20px;
     }
   </style>
 </head>
 <body>
-
-<div class="header">
-  <span class="material-icons menu-icon" onclick="openSidebar()">menu</span>
-  <div class="brand">
-    <span class="material-icons">auto_awesome</span>
-    Totoro Industries
+  <div class="header">
+    <span class="material-icons menu-icon" onclick="openSidebar()">menu</span>
+    <div class="brand">
+      <span class="material-icons">auto_awesome</span>
+      Totoro Industries
+    </div>
   </div>
-</div>
-
-<div id="mySidebar" class="sidebar">
-  <a href="javascript:void(0)" onclick="closeSidebar()"><span class="material-icons">close</span> Close</a>
-  <a href="javascript:void(0);" onclick="navigateTo('home')"><span class="material-icons">home</span> Home</a>
-  <a href="javascript:void(0);" onclick="navigateTo('about')"><span class="material-icons">info</span> About</a>
-  <a href="javascript:void(0);" onclick="navigateTo('contact')"><span class="material-icons">contact_mail</span> Contact</a>
-  <a href="javascript:void(0);" onclick="toggleServiceMenu()" style="padding-left: 30px;">
-    <span class="material-icons" style="vertical-align: middle;">miscellaneous_services</span> Services
-  </a>
-  <div id="serviceSubmenu" style="display: none; padding-left: 60px;">
-    <a href="javascript:void(0);" onclick="loadServices('educational')">Educational</a>
-    <a href="javascript:void(0);" onclick="loadServices('character')">Character</a>
-    <a href="javascript:void(0);" onclick="loadServices('custom')">Custom</a>
+  <div id="mySidebar" class="sidebar">
+    <a onclick="closeSidebar()"><span class="material-icons">close</span> Close</a>
+    <a onclick="showSection('home')"><span class="material-icons">home</span> Home</a>
+    <a onclick="showSection('about')"><span class="material-icons">info</span> About</a>
+    <a onclick="showSection('contact')"><span class="material-icons">contact_mail</span> Contact</a>
+    <div class="services-toggle" onclick="toggleSubmenu()">
+      <span class="material-icons">miscellaneous_services</span> Services
+    </div>
+    <div id="submenu" class="submenu">
+      <a onclick="loadServices('educational')">Educational</a>
+      <a onclick="loadServices('character')">Character</a>
+      <a onclick="loadServices('custom')">Custom</a>
+    </div>
   </div>
-</div>
-
-<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
-
-<div class="content" id="home">
-  <h1>Welcome to Totoro Industries</h1>
-  <p class="lead">Where technology meets cosmic wonder and forest spirit's charm in harmony.</p>
-  <div class="card">
-    <h2><span class="material-icons">stars</span> Inspired by Nature & Cosmos</h2>
-    <p>We blend the serenity of Studio Ghibli with celestial magic—crafting beautiful, dreamlike experiences that transcend the ordinary.</p>
-    <a href="#" class="button">Explore</a>
+  <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+  <div class="content" id="home">
+    <h1>Welcome to Totoro Industries</h1>
+    <p class="lead">Where technology meets cosmic wonder and forest spirit's charm in harmony.</p>
+    <div class="card">
+      <h2><span class="material-icons">stars</span> Inspired by Nature & Cosmos</h2>
+      <p>We blend the serenity of Studio Ghibli with celestial magic—crafting beautiful, dreamlike experiences that transcend the ordinary.</p>
+      <a href="#" class="button">Explore</a>
+    </div>
+    <div class="card">
+      <h2><span class="material-icons">auto_awesome</span> Fantasy Meets Innovation</h2>
+      <p>Our tools are enchanted—infused with imagination and powered by advanced design and intuitive usability.</p>
+      <a href="#" class="button">Discover More</a>
+    </div>
   </div>
-  <div class="card">
-    <h2><span class="material-icons">auto_awesome</span> Fantasy Meets Innovation</h2>
-    <p>Our tools are enchanted—infused with imagination and powered by advanced design and intuitive usability.</p>
-    <a href="#" class="button">Discover More</a>
+  <div class="content" id="about" style="display: none;">
+    <div class="card">
+      <h2><span class="material-icons">info</span> About Totoro Industries</h2>
+      <p>Totoro Industries is inspired by the whimsical spirit of Studio Ghibli and the mysteries of the cosmos. Our team creates emotionally resonant digital products designed to inspire wonder, reflection, and a touch of stardust in everyday life.</p>
+    </div>
   </div>
-</div>
-
-<div class="content" id="about" style="display: none;">
-  <div class="card">
-    <h2><span class="material-icons">info</span> About Totoro Industries</h2>
-    <p>Totoro Industries is inspired by the whimsical spirit of Studio Ghibli and the mysteries of the cosmos. Our team creates emotionally resonant digital products designed to inspire wonder, reflection, and a touch of stardust in everyday life.</p>
+  <div class="content" id="contact" style="display: none;">
+    <div class="card">
+      <h2><span class="material-icons">contact_mail</span> Contact Us</h2>
+      <p>If you would like to connect with our team or inquire about our cosmic endeavors, we’d love to hear from you.</p>
+      <p><strong>Email:</strong> hello@totoroindustries.com</p>
+      <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+    </div>
   </div>
-</div>
-
-<div class="content" id="contact" style="display: none;">
-  <div class="card">
-    <h2><span class="material-icons">contact_mail</span> Contact Us</h2>
-    <p>If you would like to connect with our team or inquire about our cosmic endeavors, we’d love to hear from you.</p>
-    <p><strong>Email:</strong> hello@totoroindustries.com</p>
-    <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+  <div class="content" id="services-section" style="display: none;">
+    <h1 id="services-title">Our Services</h1>
+    <div id="services-container"></div>
   </div>
-</div>
 
-<div class="content" id="services-section" style="display: none;">
-  <h1 id="services-title">Our Services</h1>
-  <div id="services-container"></div>
-</div>
+  <div id="custom-alert">
+    <span class="material-icons">check_circle</span>
+    <span id="custom-alert-message"></span>
+  </div>
 
-<script>
-  function openSidebar() {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.getElementById("overlay").style.width = "100%";
-  }
-  function closeSidebar() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("overlay").style.width = "0";
-  }
-  function toggleServiceMenu() {
-    const submenu = document.getElementById("serviceSubmenu");
-    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
-  }
-  function navigateTo(sectionId) {
-    document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-    const section = document.getElementById(sectionId);
-    if (section) section.style.display = 'block';
-    closeSidebar();
-  }
-  function loadServices(category) {
-    document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
-    document.getElementById("services-section").style.display = "block";
-    const container = document.getElementById("services-container");
-    container.innerHTML = '<p>Loading services...</p>';
-    fetch(`${category}.json`)
-      .then(res => res.json())
-      .then(data => {
-        container.innerHTML = '';
-        data.services.forEach(service => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <h2><span class="material-icons">${service.icon}</span> ${service.title}</h2>
-            <p>${service.description}</p>
-          `;
-          container.appendChild(card);
+  <div id="chat-icon" onclick="toggleChat()">
+    <span class="material-icons">chat</span>
+  </div>
+
+  <div id="chat-box">
+    <div id="chat-messages">Loading...</div>
+  </div>
+
+  <script>
+    function openSidebar() {
+      document.getElementById("mySidebar").style.width = "250px";
+      document.getElementById("overlay").style.width = "100%";
+    }
+    function closeSidebar() {
+      document.getElementById("mySidebar").style.width = "0";
+      document.getElementById("overlay").style.width = "0";
+    }
+    function toggleSubmenu() {
+      const submenu = document.getElementById("submenu");
+      submenu.style.display = submenu.style.display === "flex" ? "none" : "flex";
+    }
+    function showSection(sectionId) {
+      document.querySelectorAll(".content").forEach(el => el.style.display = "none");
+      document.getElementById(sectionId).style.display = "block";
+      closeSidebar();
+    }
+    function loadServices(category) {
+      document.querySelectorAll('.content').forEach(el => el.style.display = 'none');
+      document.getElementById("services-section").style.display = "block";
+      const container = document.getElementById("services-container");
+      document.getElementById("services-title").textContent = `Our ${category.charAt(0).toUpperCase() + category.slice(1)} Services`;
+      container.innerHTML = '<p>Loading services...</p>';
+      fetch(`./data/${category}.json`)
+        .then(res => res.json())
+        .then(data => {
+          container.innerHTML = '';
+          data.services.forEach(service => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const fullLink = location.origin + service.endpoint;
+            card.innerHTML = `
+              <h2><span class="material-icons">${service.icon}</span> ${service.title}</h2>
+              <p>${service.description}</p>
+              <p><strong>Endpoint:</strong> <code>${service.endpoint}</code></p>
+              <div class="button" onclick="copyToClipboard('${fullLink}')">Copy Link</div>
+            `;
+            container.appendChild(card);
+          });
+        })
+        .catch(() => {
+          container.innerHTML = '<p>Error loading services. Please try again later.</p>';
         });
-      })
-      .catch(err => {
-        container.innerHTML = '<p>Error loading services. Please try again later.</p>';
+      closeSidebar();
+    }
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showCustomAlert("Link copied!");
       });
-    closeSidebar();
-  }
-</script>
-
+    }
+    function showCustomAlert(message) {
+      const alertBox = document.getElementById("custom-alert");
+      document.getElementById("custom-alert-message").textContent = message;
+      alertBox.style.display = "flex";
+      alertBox.style.animation = "fadeInOut 2s ease forwards";
+      setTimeout(() => {
+        alertBox.style.display = "none";
+      }, 2000);
+    }
+    function toggleChat() {
+      const chatBox = document.getElementById("chat-box");
+      chatBox.classList.toggle("open");
+      if (chatBox.classList.contains("open")) {
+        loadAllModelsToChat();
+      }
+    }
+    function loadAllModelsToChat() {
+      const chat = document.getElementById("chat-messages");
+      chat.innerHTML = '<p>Loading available models...</p>';
+      const files = ['educational', 'character', 'custom'];
+      const allModels = [];
+      Promise.all(
+        files.map(file => fetch(`./data/${file}.json`).then(res => res.json()))
+      ).then(results => {
+        results.forEach(json => {
+          json.services.forEach(service => {
+            allModels.push(service);
+          });
+        });
+        chat.innerHTML = '';
+        allModels.forEach(service => {
+          const fullLink = location.origin + service.endpoint;
+          const div = document.createElement('div');
+          div.style.marginBottom = "10px";
+          div.innerHTML = `
+            <strong>${service.title}</strong><br>
+            <small>${service.endpoint}</small><br>
+            <button onclick="chatWithModel('${service.title}', '${fullLink}')">Chat</button>
+          `;
+          chat.appendChild(div);
+        });
+      }).catch(() => {
+        chat.innerHTML = "<p>Failed to load models.</p>";
+      });
+    }
+    function chatWithModel(title, endpoint) {
+      document.getElementById("chat-messages").innerHTML = `<p>You are now chatting with <strong>${title}</strong>.<br><small>Endpoint: ${endpoint}</small></p>`;
+    }
+  </script>
 </body>
 </html>
