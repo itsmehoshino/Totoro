@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Totoro Industries</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -22,8 +22,6 @@
       background: linear-gradient(120deg, #0a0f1d, #1e2a38);
       color: var(--text-light);
       overflow-x: hidden;
-      height: 100vh;
-      width: 100vw;
     }
     .header {
       display: flex;
@@ -216,7 +214,7 @@
       z-index: 1000;
       padding: 0;
       margin: 0;
-      overflow-y: auto;
+      overflow: hidden;
     }
     #chat-box.open {
       transform: translateX(0);
@@ -378,7 +376,7 @@
         files.map(file => fetch(`./data/${file}.json`).then(res => {
           if (!res.ok) throw new Error(`Failed to fetch ${file}.json`);
           return res.json();
-        }).catch(() => ({ services: [] }))) // Fallback to empty array on error
+        }))
       ).then(results => {
         results.forEach(json => {
           json.services.forEach(service => {
@@ -390,7 +388,7 @@
           });
         });
         if (allModels.length === 0) {
-          chatHistory.innerHTML = '<p>No models available.</p>';
+          chatHistory.innerHTML = '<p>Failed to load models.</p>';
         } else {
           chatHistory.innerHTML = '';
           selectedModelEndpoint = allModels[0].endpoint;
@@ -470,7 +468,7 @@
         z-index: 1000;
         padding: 0;
         margin: 0;
-        overflow-y: auto;
+        overflow: hidden;
       }
       #chat-box.open {
         transform: translateX(0);
@@ -497,10 +495,12 @@
       #chat-input-container {
         display: flex;
         flex-direction: column;
-        padding: 10px 20px;
+        padding: 10px;
         background: rgba(10, 15, 29, 0.95);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
+        position: absolute;
+        bottom: 0;
+        left: 0;
         width: 100%;
         box-sizing: border-box;
       }
@@ -516,26 +516,30 @@
         height: 40px;
         transition: height 0.3s ease;
         margin-bottom: 10px;
+        font-size: 16px;
       }
       #input-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
       }
       #model-select {
-        padding: 5px 10px;
+        padding: 8px 12px;
         border: none;
         border-radius: 20px;
         background: rgba(255, 255, 255, 0.05);
         color: var(--text-light);
         outline: none;
-        max-width: 150px;
+        font-size: 14px;
+        min-width: 120px;
       }
       .button-group {
         display: flex;
         gap: 10px;
       }
-      #expand-button {
+      #expand-button, #send-button {
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -545,42 +549,44 @@
         display: flex;
         align-items: center;
         justify-content: center;
-      }
-      #expand-button .material-icons {
-        color: white;
         font-size: 20px;
       }
-      #send-button {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: var(--button-gradient);
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #send-button .material-icons {
+      #expand-button .material-icons, #send-button .material-icons {
         color: white;
-        font-size: 20px;
       }
       @media (max-width: 600px) {
-        #chat-input-container {
-          padding: 10px;
-        }
         #chat-input {
+          font-size: 14px;
+          height: 35px;
           margin-bottom: 8px;
         }
         #model-select {
-          max-width: 100px;
-        }
-        .button-group {
-          gap: 5px;
+          min-width: 100px;
+          padding: 6px 10px;
+          font-size: 12px;
         }
         #expand-button, #send-button {
           width: 35px;
           height: 35px;
+        }
+        #input-actions {
+          gap: 5px;
+        }
+      }
+      @media (min-width: 601px) and (max-width: 900px) {
+        #chat-input {
+          font-size: 15px;
+        }
+        #model-select {
+          min-width: 130px;
+        }
+      }
+      @media (min-width: 901px) {
+        #chat-input {
+          font-size: 16px;
+        }
+        #model-select {
+          min-width: 150px;
         }
       }
     `;
