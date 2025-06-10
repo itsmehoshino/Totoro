@@ -1,0 +1,10 @@
+{
+  "services": [
+    {
+      "title": "Totoro AI",
+      "description": "Personalized customed Artificial Intelligence made by Francis Loyd Raval",
+      "endpoint": "/totoro?query=",
+      "icon": "book"
+    }
+  ]
+}

@@ -201,21 +201,23 @@
     }
     #chat-box {
       position: fixed;
-      bottom: 90px;
-      right: -400px;
-      width: 350px;
-      height: 400px;
-      background: #121e2a;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(120deg, #0a0f1d, #1e2a38);
       color: var(--text-light);
-      border-radius: 12px;
+      border-radius: 0;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      transition: 0.4s ease;
-      z-index: 21;
-      padding: 20px;
-      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+      z-index: 1000;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
     }
     #chat-box.open {
-      right: 20px;
+      transform: translateX(0);
     }
   </style>
 </head>
@@ -289,6 +291,8 @@
   </div>
 
   <script>
+    let selectedModelEndpoint = '';
+
     function openSidebar() {
       document.getElementById("mySidebar").style.width = "250px";
       document.getElementById("overlay").style.width = "100%";
@@ -352,41 +356,229 @@
       const chatBox = document.getElementById("chat-box");
       chatBox.classList.toggle("open");
       if (chatBox.classList.contains("open")) {
-        loadAllModelsToChat();
+        initializeChat();
       }
+    }
+    function initializeChat() {
+      const chat = document.getElementById("chat-messages");
+      chat.innerHTML = '<div id="chat-container"><div id="chat-header"><button id="close-chat" onclick="toggleChat()">Close</button></div><div id="chat-history"></div><div id="chat-input-container"><textarea id="chat-input" placeholder="Type your question..." rows="1"></textarea><div id="input-actions"><select id="model-select" onchange="selectModelFromDropdown()"></select><div class="button-group"><button id="expand-button" onclick="expandInput()"><span class="material-icons">expand_more</span></button><button id="send-button" onclick="sendMessage()"><span class="material-icons">send</span></button></div></div></div></div>';
+      loadAllModelsToChat();
     }
     function loadAllModelsToChat() {
       const chat = document.getElementById("chat-messages");
-      chat.innerHTML = '<p>Loading available models...</p>';
+      const chatHistory = document.getElementById("chat-history");
+      const modelSelect = document.getElementById("model-select");
+      chatHistory.innerHTML = '<p>Loading available models...</p>';
+      modelSelect.innerHTML = '<option value="">Select a model</option>';
       const files = ['educational', 'character', 'custom'];
       const allModels = [];
       Promise.all(
-        files.map(file => fetch(`./data/${file}.json`).then(res => res.json()))
+        files.map(file => fetch(`./data/${file}.json`).then(res => {
+          if (!res.ok) throw new Error(`Failed to fetch ${file}.json`);
+          return res.json();
+        }))
       ).then(results => {
         results.forEach(json => {
           json.services.forEach(service => {
             allModels.push(service);
+            const option = document.createElement('option');
+            option.value = service.endpoint;
+            option.textContent = service.title;
+            modelSelect.appendChild(option);
           });
         });
-        chat.innerHTML = '';
-        allModels.forEach(service => {
-          const fullLink = location.origin + service.endpoint;
-          const div = document.createElement('div');
-          div.style.marginBottom = "10px";
-          div.innerHTML = `
-            <strong>${service.title}</strong><br>
-            <small>${service.endpoint}</small><br>
-            <button onclick="chatWithModel('${service.title}', '${fullLink}')">Chat</button>
-          `;
-          chat.appendChild(div);
-        });
-      }).catch(() => {
-        chat.innerHTML = "<p>Failed to load models.</p>";
+        if (allModels.length === 0) {
+          chatHistory.innerHTML = '<p>Failed to load models.</p>';
+        } else {
+          chatHistory.innerHTML = '';
+          selectedModelEndpoint = allModels[0].endpoint;
+        }
+      }).catch(error => {
+        console.error('Error loading models:', error);
+        chatHistory.innerHTML = '<p>Failed to load models. Check console for details.</p>';
       });
     }
-    function chatWithModel(title, endpoint) {
-      document.getElementById("chat-messages").innerHTML = `<p>You are now chatting with <strong>${title}</strong>.<br><small>Endpoint: ${endpoint}</small></p>`;
+    function selectModelFromDropdown() {
+      const modelSelect = document.getElementById("model-select");
+      selectedModelEndpoint = modelSelect.value;
+      if (selectedModelEndpoint) {
+        document.getElementById("chat-input").focus();
+      }
     }
+    function sendMessage() {
+      const chatHistory = document.getElementById("chat-history");
+      const input = document.getElementById("chat-input");
+      const message = input.value.trim();
+      if (message && selectedModelEndpoint) {
+        const fullUrl = location.origin + selectedModelEndpoint + '?query=' + encodeURIComponent(message);
+        chatHistory.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+        fetch(fullUrl)
+          .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+            return res.json();
+          })
+          .then(data => {
+            console.log('Response data:', data);
+            const response = data.response || 'No response available or invalid format.';
+            chatHistory.innerHTML += `<p><strong>Bot:</strong> ${response}</p>`;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+          })
+          .catch(error => {
+            console.error('Fetch error:', error);
+            chatHistory.innerHTML += `<p><strong>Bot:</strong> Error fetching response: ${error.message}. Check console.</p>`;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+          });
+        input.value = '';
+      } else if (!selectedModelEndpoint) {
+        chatHistory.innerHTML += `<p><strong>Bot:</strong> Please select a model first.</p>`;
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+      }
+    }
+    function expandInput() {
+      const input = document.getElementById("chat-input");
+      input.rows = input.rows === 1 ? 4 : 1;
+      input.style.height = input.rows === 1 ? '40px' : '120px';
+      document.getElementById("expand-button").textContent = input.rows === 1 ? 'expand_more' : 'expand_less';
+    }
+    function generateResponse(message) {
+      const responses = {
+        "hello": "Hello! How can I assist you today?",
+        "help": "I'm here to help! Please ask about our services or anything else.",
+        "services": "We offer Educational, Character, and Custom services. Which would you like to know more about?",
+        "default": "I'm not sure how to respond to that. Try asking about services or saying 'help'!"
+      };
+      const lowerMessage = message.toLowerCase();
+      return responses[lowerMessage] || responses["default"];
+    }
+    document.getElementById("chat-icon").onclick = toggleChat;
+    const style = document.createElement('style');
+    style.textContent = `
+      #chat-box {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(120deg, #0a0f1d, #1e2a38);
+        color: var(--text-light);
+        border-radius: 0;
+        box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+        z-index: 1000;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+      }
+      #chat-box.open {
+        transform: translateX(0);
+      }
+      #chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      #chat-header {
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+      }
+      #close-chat {
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      #chat-history {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px;
+        margin: 0;
+      }
+      #chat-input-container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 20px;
+        background: rgba(10, 15, 29, 0.95);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      #chat-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-light);
+        outline: none;
+        resize: none;
+        height: 40px;
+        transition: height 0.3s ease;
+        margin-bottom: 10px;
+      }
+      #input-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #model-select {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-light);
+        outline: none;
+        max-width: 150px;
+      }
+      .button-group {
+        display: flex;
+        gap: 10px;
+      }
+      #expand-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--button-gradient);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #expand-button .material-icons {
+        color: white;
+        font-size: 20px;
+      }
+      #send-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--button-gradient);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #send-button .material-icons {
+        color: white;
+        font-size: 20px;
+      }
+      @media (max-width: 600px) {
+        #chat-input-container {
+          padding: 10px;
+        }
+        #chat-input {
+          margin-bottom: 8px;
+        }
+        #model-select {
+          max-width: 100px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
