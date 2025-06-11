@@ -16,7 +16,11 @@ router.get('/totoro', async (req: Request, res: Response) => {
   try {
     const openai = new OpenAI({
       baseUrl: 'https://openrouter.ai/api/v1',
-      apiKey: process.env?.API_KEY
+      apiKey: process.env?.API_KEY,
+      defaultHeaders: {
+        'HTTP-Referer': 'https://totoro.onrender.com',
+        'X-Title': 'Totoro Industries'
+      }
     });
 
     const response = await openai.chat.completions.create({
