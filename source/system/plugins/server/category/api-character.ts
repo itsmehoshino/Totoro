@@ -1,10 +1,9 @@
 import express from 'express';
-import { Request, Response } from 'express';
 import axios from 'axios';
 
 const router = express.Router();
 
-router.get('/tate', async (req: Request, res: Response) => {
+router.get('/tate', async (req, res) => {
   const userQuery = req.query.query as string;
 
   if (!userQuery) {
