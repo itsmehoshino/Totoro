@@ -6,6 +6,10 @@
     "autoReconnect": false,
     "autoMarkDelivery": true
   },
+  "TOKEN": {
+    "openai": "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",
+    "NOTE": "This is the token for the API, You need to get it from the Totoro AI Website."
+  },
   "prefix": "/",
   "subprefix": ".",
   "maintenance": false,

@@ -361,15 +361,15 @@
     }
     function initializeChat() {
       const chat = document.getElementById("chat-messages");
-      chat.innerHTML = '<div id="chat-container"><div id="chat-header"><button id="close-chat" onclick="toggleChat()">Close</button></div><div id="chat-history"></div><div id="chat-input-container"><textarea id="chat-input" placeholder="Type your question..." rows="1"></textarea><div id="input-actions"><select id="model-select" onchange="selectModelFromDropdown()"></select><div class="button-group"><button id="expand-button" onclick="expandInput()"><span class="material-icons">expand_more</span></button><button id="send-button" onclick="sendMessage()"><span class="material-icons">send</span></button></div></div></div></div>';
+      chat.innerHTML = '<div id="chat-container"><div id="chat-header"><button id="close-chat" onclick="toggleChat()">Close</button></div><div id="chat-history"></div><div id="chat-input-container"><div id="model-popout" class="model-popout"></div><textarea id="chat-input" placeholder="Type your question..." rows="1"></textarea><div id="input-actions"><div id="model-button-container"><button id="model-button" onclick="toggleModelPopout()">Select a model <span class="material-icons">arrow_drop_down</span></button></div><div class="button-group"><button id="expand-button" onclick="expandInput()"><span class="material-icons">expand_more</span></button><button id="send-button" onclick="sendMessage()"><span class="material-icons">send</span></button></div></div></div></div>';
       loadAllModelsToChat();
     }
     function loadAllModelsToChat() {
       const chat = document.getElementById("chat-messages");
       const chatHistory = document.getElementById("chat-history");
-      const modelSelect = document.getElementById("model-select");
+      const modelPopout = document.getElementById("model-popout");
       chatHistory.innerHTML = '<p>Loading available models...</p>';
-      modelSelect.innerHTML = '<option value="">Select a model</option>';
+      modelPopout.innerHTML = '';
       const files = ['educational', 'character', 'custom'];
       const allModels = [];
       Promise.all(
@@ -381,10 +381,19 @@
         results.forEach(json => {
           json.services.forEach(service => {
             allModels.push(service);
-            const option = document.createElement('option');
-            option.value = service.endpoint;
+            const option = document.createElement('div');
+            option.className = 'model-option';
             option.textContent = service.title;
-            modelSelect.appendChild(option);
+            option.dataset.endpoint = service.endpoint;
+            option.onclick = () => {
+              selectedModelEndpoint = service.endpoint;
+              document.getElementById("model-button").textContent = service.title;
+              document.getElementById("model-button").appendChild(document.createElement('span')).className = 'material-icons';
+              document.getElementById("model-button").lastChild.textContent = 'arrow_drop_down';
+              document.getElementById("model-popout").style.display = 'none';
+              document.getElementById("chat-input").focus();
+            };
+            modelPopout.appendChild(option);
           });
         });
         if (allModels.length === 0) {
@@ -392,18 +401,18 @@
         } else {
           chatHistory.innerHTML = '';
           selectedModelEndpoint = allModels[0].endpoint;
+          document.getElementById("model-button").textContent = allModels[0].title;
+          document.getElementById("model-button").appendChild(document.createElement('span')).className = 'material-icons';
+          document.getElementById("model-button").lastChild.textContent = 'arrow_drop_down';
         }
       }).catch(error => {
         console.error('Error loading models:', error);
         chatHistory.innerHTML = '<p>Failed to load models. Check console for details.</p>';
       });
     }
-    function selectModelFromDropdown() {
-      const modelSelect = document.getElementById("model-select");
-      selectedModelEndpoint = modelSelect.value;
-      if (selectedModelEndpoint) {
-        document.getElementById("chat-input").focus();
-      }
+    function toggleModelPopout() {
+      const popout = document.getElementById("model-popout");
+      popout.style.display = popout.style.display === "flex" ? "none" : "flex";
     }
     function sendMessage() {
       const chatHistory = document.getElementById("chat-history");
@@ -504,6 +513,18 @@
         width: 100%;
         box-sizing: border-box;
       }
+      #model-popout {
+        display: none;
+        flex-direction: column;
+        background: rgba(10, 15, 29, 0.95);
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        min-width: 120px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+        margin-bottom: 10px; /* Space above the input */
+      }
       #chat-input {
         flex-grow: 1;
         padding: 10px;
@@ -525,15 +546,33 @@
         gap: 10px;
         flex-wrap: wrap;
       }
-      #model-select {
+      #model-button-container {
+        position: relative;
+      }
+      #model-button {
         padding: 8px 12px;
         border: none;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--text-light);
-        outline: none;
+        background: var(--button-gradient);
+        color: white;
         font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
         min-width: 120px;
+      }
+      #model-button .material-icons {
+        font-size: 18px;
+      }
+      .model-option {
+        padding: 10px 12px;
+        color: var(--aqua);
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .model-option:hover {
+        background: rgba(255, 255, 255, 0.1);
       }
       .button-group {
         display: flex;
@@ -560,14 +599,19 @@
           height: 35px;
           margin-bottom: 8px;
         }
-        #model-select {
+        #model-button {
           min-width: 100px;
           padding: 6px 10px;
           font-size: 12px;
         }
-        #expand-button, #send-button {
-          width: 35px;
-          height: 35px;
+        #model-button .material-icons {
+          font-size: 16px;
+        }
+        #model-popout {
+          min-width: 100px;
+        }
+        .model-option {
+          font-size: 12px;
         }
         #input-actions {
           gap: 5px;
@@ -577,7 +621,7 @@
         #chat-input {
           font-size: 15px;
         }
-        #model-select {
+        #model-button {
           min-width: 130px;
         }
       }
@@ -585,7 +629,7 @@
         #chat-input {
           font-size: 16px;
         }
-        #model-select {
+        #model-button {
           min-width: 150px;
         }
       }

@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "discord.js": "^14.19.3",
     "dotenv": "^16.5.0",
+    "events": "^3.3.0",
     "express": "^5.1.0",
     "facebook-chat-api": "github:ruingl/facebook-chat-api",
     "fs": "^0.0.1-security",
@@ -22,10 +23,10 @@
     "gradient-string": "^2.0.2",
     "mongoose": "^8.15.1",
     "node-fetch": "^3.3.1",
+    "openai": "latest",
     "path": "^0.12.7",
     "websocket": "^1.0.35",
-    "winston": "^3.17.0",
-    "openai": "latest"
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/node": "^20.17.54",

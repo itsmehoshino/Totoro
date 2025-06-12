@@ -1,10 +1,16 @@
 {
   "services": [
     {
-      "title": "Totoro AI",
-      "description": "Personalized customed Artificial Intelligence made by Francis Loyd Raval",
-      "endpoint": "/totoro?query=",
-      "icon": "book"
+      "title": "Jasrel",
+      "description": "Personalized customed Artificial Intelligence that has a bad personality, Developed by Francis Loyd Raval.",
+      "endpoint": "/jasmean?query=",
+      "icon": "robot"
+    },
+    {
+      "title": "Celestine",
+      "description": "Personalized customed Artificial intelligence that has a maniac and flirty personality developed by Francis Loyd Raval.",
+      "endpoint": "/celestine?query=",
+      "icon": "robot"
     }
   ]
 }

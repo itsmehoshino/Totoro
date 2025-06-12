@@ -3,6 +3,13 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { log } from './system/views/custom';
 import { starter } from './system/views/starter';
+import EventEmitter from "events";
+try {
+  require("./global");
+} catch (error) {}
+
+const bot = new EventEmitter();
+global.bot = bot;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
