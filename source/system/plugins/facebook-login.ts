@@ -36,6 +36,7 @@ export async function login() {
       listenEvents: config.fcaOptions.listenEvents,
       forceLogin: config.fcaOptions.forceLogin,
       selfListen: config.fcaOptions.selfListen,
+      userAgent: config.fcaOptions.userAgent,
       autoReconnect: config.fcaOptions.autoReconnect,
       autoMarkDelivery: config.fcaOptions.autoMarkDelivery,
     });
