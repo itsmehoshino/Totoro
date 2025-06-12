@@ -182,6 +182,26 @@
       90% { opacity: 1; transform: translate(-50%, 0); }
       100% { opacity: 0; transform: translate(-50%, 20px); }
     }
+    @keyframes popoutFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes popoutFadeOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
     #chat-icon {
       position: fixed;
       bottom: 20px;
@@ -412,7 +432,15 @@
     }
     function toggleModelPopout() {
       const popout = document.getElementById("model-popout");
-      popout.style.display = popout.style.display === "flex" ? "none" : "flex";
+      if (popout.style.display === "flex") {
+        popout.style.animation = "popoutFadeOut 0.3s ease forwards";
+        setTimeout(() => {
+          popout.style.display = "none";
+        }, 300); // Match animation duration
+      } else {
+        popout.style.display = "flex";
+        popout.style.animation = "popoutFadeIn 0.3s ease forwards";
+      }
     }
     function sendMessage() {
       const chatHistory = document.getElementById("chat-history");
