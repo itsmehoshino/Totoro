@@ -1,5 +1,7 @@
 import express from 'express';
 import totoro from '../auto-totoro';
+import custom from './category/api-custom';
+import character from './category/api-character';
 import educational from './category/api-educational';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -12,6 +14,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, './views')));
 app.use('', totoro);
+app.use('', custom);
 app.use('', educational);
 
 app.get('/', (req, res) => {
