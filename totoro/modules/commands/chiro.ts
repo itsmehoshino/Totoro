@@ -4,7 +4,7 @@ const meta = {
   name: 'chiro',
   aliases: ['c'],
 };
-async function execute({ response }){
+async function execute({ response, args }){
   const prompt = args.join(" ");
   if (!prompt){
     return response.reply("Please provide a question.");
