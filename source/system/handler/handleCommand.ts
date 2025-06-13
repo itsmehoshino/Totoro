@@ -5,12 +5,17 @@ export async function handleCommand({ api, event }) {
 
   const mainPrefix = global.Totoro.prefix;
   const subPrefix = global.Totoro.config.subprefix || '';
+  const botName = global.Totoro.config.botname || '';
   let usedPrefix = '';
 
   if (event.body.startsWith(mainPrefix)) {
     usedPrefix = mainPrefix;
   } else if (subPrefix && event.body.startsWith(subPrefix)) {
     usedPrefix = subPrefix;
+  } else if (botName && event.body.toLowerCase().includes(botName.toLowerCase())) {
+    const response = new Response(api, event);
+    response.reply(`Hello there!! Missed me? Oh dont know my prefix and subprefix? Here my prefix and subprefix my friend:\n\nPREFIX: [${mainPrefix}]\nSUBPREFIX: [${subPrefix || 'None'}]`, event.threadID);
+    return;
   } else {
     return;
   }
