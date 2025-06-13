@@ -13,6 +13,7 @@
   },
   "prefix": "/",
   "subprefix": ".",
+  "botname": "totoro",
   "maintenance": false,
   "developer": ["61554222594723"],
   "admin": ["61554222594723"],
