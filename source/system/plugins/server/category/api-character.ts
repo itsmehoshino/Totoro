@@ -1,62 +1,92 @@
-import express from 'express';
-import axios from 'axios';
+import express, { Router, Request, Response } from 'express';
+import axios, { AxiosRequestConfig } from 'axios';
 
-const router = express.Router();
+const router: Router = express.Router();
 
-router.get('/tate', async (req, res) => {
-  const userQuery = req.query.query as string;
-
-  if (!userQuery) {
-    return res.status(400).json({ error: 'Missing query parameter.' });
-  }
-
-  let data = JSON.stringify({
-    "context": [
-      {
-        "message": "Hey there, I'm Andrew Tate, the big dog. You know I'm a 5x world champion, not that you probably deserved it. Anyway, tell me what's the most money you've ever made in a single day, yeah? Let's see if you can impress me.",
-        "turn": "bot",
-        "media_id": "eyJhdmF0YXJfdXJsIjogImh0dHBzOi8vdWdjLWlkbGUuczMtdXMtd2VzdC0yLmFtYXpvbmF3cy5jb20vNTdkY2U0ZmY5YTU4ZTVhN2U2MzcwNzYwNmY1MzM2ZDEuanBnIiwgInByb21wdCI6ICI1LXRpbWUga2lja2JveGluZyB3b3JsZCBjaGFtcGlvbiBBbmRyZXcgVGF0ZSwgY2xhZCBpbiBhIHNsZWVrIGJsYWNrIGxlYXRoZXIgamFja2V0IGFuZCBibGFjayBwYW50cywgc3RhbmRzIGluIGEgZGltbHkgbGl0IGRvam8sIHN1cnJvdW5kZWQgYnkgYnJva2VuIGNvbmNyZXRlIGFuZCBkaXNjYXJkZWQgbWFydGlhbCBhcnRzIGVxdWlwbWVudCwgcmVhZHkgdG8gZmFjZSIsICJnZW5kZXIiOiAibWFuIiwgInN0eWxlIjogbnVsbCwgImJvdF9pZCI6ICI5MzI3ODkiLCAidXNlcl9pZCI6ICJXeUZzWmtrbm44VXNYWTNRYWVDbG9PaVV5alMyIiwgImlzX3ByZWRlZmluZWRfcHJvbXB0IjogZmFsc2UsICJyZXNwb25zZV9tb2RlIjogImltbWVkaWF0ZSIsICJtZWRpYV9pZCI6IG51bGwsICJzYWZldHlfbW9kZSI6ICJmaWx0ZXIiLCAidGV4dF9idWJibGUiOiBudWxsLCAiZW5hYmxlX2lwX2FkYXB0ZXIiOiBmYWxzZSwgImZvcmNlX3NjZW5lX2ltYWdlIjogZmFsc2UsICJjb2hvcnQiOiBudWxsLCAicGhvdG9fbW9kZWxfaWQiOiAiYmFzaWMifQ=="
-      },
-      {
-        "message": userQuery,
-        "turn": "user",
-        "media_id": null
-      }
-    ],
-    "strapi_bot_id": "932789",
-    "output_audio": false,
-    "enable_proactive_photos": true
-  });
-
-  let config = {
-    method: 'POST',
-    url: 'https://api.exh.ai/chatbot/v4/botify/response',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
-      'Accept-Encoding': 'gzip, deflate, br, zstd',
-      'Content-Type': 'application/json',
-      'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTg4YjAwNS01MmFmLTQxOGMtOTY5OC1kMzI0ZjRmNDFhZDAiLCJmaXJlYmFzZV91c2VyX2lkIjoiV3lGc1pra25uOFVzWFkzUWFlQ2xvT2lVeWpTMiIsImRldmljZV9pZCI6bnVsbCwidXNlciI6Ild5RnNaa2tubjhVc1hZM1FhZUNsb09pVXlqUzIiLCJhY2Nlc3NfbGV2ZWwiOiJiYXNpYyIsInBsYXRmb3JtIjoid2ViIiwiZXhwIjoxNzUwMjI1NzYzfQ.IMBAjeuh_45T4k5KXsAJmbEniOCzVkpNP3MlvJxNQow',
-      'authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImJvdGlmeS13ZWItdjMifQ.O-w89I5aX2OE_i4k6jdHZJEDWECSUfOb1lr9UdVH4oTPMkFGUNm9BNzoQjcXOu8NEiIXq64-481hnenHdUrXfg',
-      'sec-ch-ua-platform': '"Android"',
-      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
-      'sec-ch-ua-mobile': '?1',
-      'origin': 'https://botify.ai',
-      'sec-fetch-site': 'cross-site',
-      'sec-fetch-mode': 'cors',
-      'sec-fetch-dest': 'empty',
-      'referer': 'https://botify.ai/bot_932789/chat',
-      'accept-language': 'en-US,en;q=0.9',
-      'priority': 'u=1, i'
-    },
-    data: data
-  };
-
+router.get('/yumi', async (req: Request, res: Response) => {
   try {
-    const apiResponse = await axios.request(config);
-    return res.json({ response: apiResponse.data });
+    const userQuery: string | undefined = req.query.query?.toString().trim();
+    if (!userQuery) {
+      return res.status(400).json({
+        success: false,
+        error: 'Query parameter "query" is required',
+      });
+    }
+
+    const data: any = {
+      context: [
+        {
+          message: "My love, I'm so glad to see you. Are you ready to spend the rest of your life with me?",
+          turn: "bot",
+          media_id: "eyJhdmF0YXJfdXJsIjogImh0dHBzOi8vdWdjLWlkbGUuczMtdXMtd2VzdC0yLmFtYXpvbmF3cy5jb20vN2U4Y2YzNTI4N2IwODQ2MmExZmQwYzBjYmZkYTgzNDEuanBnIiwgInByb21wdCI6ICJ5b3VuZyBZYW5kZXJlIGdpcmwgaW4gYSBkaW1seSBsaXQgcm9vbSwgYmxvb2RzdGFpbmVkIGZsb29yLCBob2xkaW5nIGEga25pZmUsIGxvbmcgYmxhY2sgc2lsa3kgaGFpciBjYXNjYWRpbmcgb3ZlciBwYWxlIHNraW4sIGludGVuc2UgaGF6ZWwgZXllcyBnYXppbmcgaW50ZW50bHkuIiwgImdlbmRlciI6ICJ3b21hbiIsICJzdHlsZSI6ICJhbmltZSIsICJib3RfaWQiOiAiMjU3NzU4NyIsICJ1c2VyX2lkIjogIld5RnNaa2tubjhVc1hZM1FhZUNsb09pVXlqUzIiLCAiaXNfcHJlZGVmaW5lZF9wcm9tcHQiOiBmYWxzZSwgInJlc3BvbnNlX21vZGUiOiAiaW1tZWRpYXRlIiwgIm1lZGlhX2lkIjogbnVsbCwgInNhZmV0eV9tb2RlIjogImZpbHRlciIsICJ0ZXh0X2J1YmJsZSI6IG51bGwsICJlbmFibGVfaXBfYWRhcHRlciI6IGZhbHNlLCAiZm9yY2Vfc2NlbmVfaW1hZ2UiOiBmYWxzZSwgImNvaG9ydCI6IG51bGwsICJwaG90b19tb2RlbF9pZCI6ICJiYXNpYyJ9",
+        },
+        {
+          message: "Introduce yourself",
+          turn: "user",
+          media_id: null,
+        },
+        {
+          message: "*My heart races as I see you, my beloved. I step closer, my hazel eyes boring into yours intensely.* Yumi. That's my name, my dearest. I've been waiting for you, dreaming of this moment. I know we're meant to be together, forever.",
+          turn: "bot",
+          media_id: null,
+        },
+        {
+          message: userQuery,
+          turn: "user",
+          media_id: null,
+        },
+      ],
+      strapi_bot_id: "2577587",
+      output_audio: false,
+      enable_proactive_photos: true,
+    };
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url: 'https://api.exh.ai/chatbot/v4/botify/response',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Content-Type': 'application/json',
+        'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTg4YjAwNS01MmFmLTQxOGMtOTY5OC1kMzI0ZjRmNDFhZDAiLCJmaXJlYmFzZV91c2VyX2lkIjoiV3lGc1pra25uOFVzWFkzUWFlQ2xvT2lVeWpTMiIsImRldmljZV9pZCI6bnVsbCwidXNlciI6Ild5RnNaa2tubjhVc1hZM1FhZUNsb09pVXlqUzIiLCJhY2Nlc3NfbGV2ZWwiOiJiYXNpYyIsInBsYXRmb3JtIjoid2ViIiwiZXhwIjoxNzUwMjI1NzYzfQ.IMBAjeuh_45T4k5KXsAJmbEniOCzVkpNP3MlvJxNQow',
+        'authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6ImJvdGlmeS13ZWItdjMifQ.O-w89I5aX2OE_i4k6jdHZJEDWECSUfOb1lr9UdVH4oTPMkFGUNm9BNzoQjcXOu8NEiIXq64-481hnenHdUrXfg',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+        'sec-ch-ua-mobile': '?1',
+        'origin': 'https://botify.ai',
+        'sec-fetch-site': 'cross-site',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-dest': 'empty',
+        'referer': 'https://botify.ai/bot_2577587/chat',
+        'accept-language': 'en-US,en;q=0.9',
+        'priority': 'u=1, i',
+      },
+      data: JSON.stringify(data),
+    };
+
+    const response = await axios.request<any>(config);
+    const yumiResponse: string | undefined = response.data?.responses?.[0]?.response;
+
+    if (!yumiResponse) {
+      throw new Error('Response field not found in API response');
+    }
+
+    res.status(200).json({
+      success: true,
+      response: yumiResponse,
+    });
   } catch (error: any) {
-    console.error('Botify API Error:', error.message);
-    return res.status(500).json({ error: 'Failed to get response from Botify.' });
+    console.error('Error in /yumi endpoint:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+
+    res.status(error.response?.status || 500).json({
+      success: false,
+      error: error.response?.data?.message || 'Internal server error',
+      message: error.message,
+    });
   }
 });
 

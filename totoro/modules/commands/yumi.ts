@@ -1,8 +1,12 @@
 import axios from 'axios';
 
-const meta = {
-  name: 'tate',
-  aliases: ['topg'],
+const meta: TotoroAI.CommandMeta = {
+  name: 'yumi',
+  role: 0,
+  aliases: ['y'],
+  developer: "Francis Loyd Raval",
+  description: "A yandere AI developed by Francis Loyd Raval.",
+  usage: "yumi [ question ]"
 };
 async function execute({ response, args }){
   const prompt = args.join(" ");
@@ -10,7 +14,7 @@ async function execute({ response, args }){
     return response.reply("Please provide a question.");
   }
   try {
-    const res = await axios.get(`https://totoro-bb5e.onrender.com/tate?query=${encodeURIComponent(prompt)}`)
+    const res = await axios.get(`https://totoro-bb5e.onrender.com/yumi?query=${encodeURIComponent(prompt)}`)
     const data = res.data.response;
     response.reply(data);
   } catch (err) {
