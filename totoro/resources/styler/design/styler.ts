@@ -1,6 +1,10 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import * as fonts from "./fonts";
+import * as fonts from "../fonter/fonts";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const DESIGNS_FILE = path.join(__dirname, "./plugin/designs.json");
 
