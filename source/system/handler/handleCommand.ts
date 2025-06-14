@@ -15,7 +15,7 @@ export async function handleCommand({ api, event }) {
     usedPrefix = subPrefix;
   } else if (botName && event.body.toLowerCase().includes(botName.toLowerCase())) {
     const response = new Response(api, event);
-    response.reply(`Hello there!! Missed me? Oh dont know my prefix and subprefix? Here my prefix and subprefix my friend:\n\nPREFIX: [${mainPrefix}]\nSUBPREFIX: [${subPrefix || 'None'}]`, event.threadID);
+    response.reply(fonts.sans(`Hello there!! Missed me? Oh dont know my prefix and subprefix? Here my prefix and subprefix my friend:\n\nPREFIX: [${mainPrefix}]\nSUBPREFIX: [${subPrefix || 'None'}]\n\n${fonts.bold("Developed by: ")} Francis Loyd Raval.`, event.threadID));
     return;
   } else {
     return;
@@ -51,7 +51,7 @@ export async function handleCommand({ api, event }) {
     const requiredRole = command.meta?.role ?? 0;
 
     if (userRole > requiredRole && userRole !== 1) {
-      response.send('You do not have permission to use this command', event.threadID);
+      response.send(fonts.sans('You do not have permission to use this command'));
       return;
     }
 
@@ -63,5 +63,5 @@ export async function handleCommand({ api, event }) {
     return;
   }
 
-  response.send(`Command not found, use ${mainPrefix}help to view the command`, event.threadID);
+  response.reply(fonts.sans(`Command not found, use ${mainPrefix}help to view the command`));
 }
