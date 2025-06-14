@@ -16,14 +16,6 @@ declare global {
       moderator?: string[];
       replyTimeout?: number;
       debug?: boolean;
-      fcaOptions?: {
-        listenEvents: boolean;
-        forceLogin: boolean;
-        selfListen: boolean;
-        autoReconnect: boolean;
-        autoMarkDelivery: boolean;
-        userAgent?: string;
-      };
       restartMqtt?: {
         listen: boolean;
         time?: number;
@@ -32,9 +24,22 @@ declare global {
 
     interface CommandMeta {
       name: string;
-      aliases?: string[];
       role?: number;
+      aliases?: string[];
       cooldown?: number;
+      developer?: string;
+      description?: string;
+      usage?: string;
+      style?: {
+        type: string;
+        title: string;
+        footer: string;
+      };
+      font?: {
+        title?: FontTypes | FontTypes[];
+        content?: FontTypes | FontTypes[];
+        footer?: FontTypes | FontTypes[];
+      };
     }
 
     interface Command {
@@ -44,6 +49,8 @@ declare global {
 
     interface EventMeta {
       name: string;
+      description?: string;
+      developer?: string;
     }
 
     interface EventHandler {
@@ -68,17 +75,12 @@ declare global {
       [key: string]: any;
     }
 
-    interface FacebookApi {
-      sendMessage: (message: string | object, threadID: string) => Promise<{ messageID: string }>;
-      editMessage: (message: string, messageID: string) => Promise<any>;
-      listenMqtt: (callback: (err: any, event: MessengerEvent) => void) => void;
-    }
-
     interface EntryObj {
-      api: FacebookApi;
+      api: any;
       response: Response;
       event: MessengerEvent;
       args: string[];
+      fonts: font;
     }
 
     interface CommandContext extends EntryObj {}

@@ -1,8 +1,12 @@
 import axios from 'axios';
 
-const meta = {
+const meta: TotoroAI.CommandMeta = {
   name: 'chiro',
+  role: 0,
   aliases: ['c'],
+  developer: "Francis Loyd Raval",
+  description: "An AI that acts like a flirty one.",
+  usage: "chiro [ question ]"
 };
 async function execute({ response, args }){
   const prompt = args.join(" ");

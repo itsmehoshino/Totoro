@@ -15,6 +15,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, './views')));
 app.use('', totoro);
 app.use('', custom);
+app.use('', character);
 app.use('', educational);
 
 app.get('/', (req, res) => {

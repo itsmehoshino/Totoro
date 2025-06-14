@@ -15,7 +15,11 @@ export async function starter() {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   log("SYSTEM", "Totoro is now running...");
   await new Promise((resolve) => setTimeout(resolve, 1000));
+  log("COMMAND", "Loading commands...");
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   await util.loadCommands();
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  log("EVENT", "Loading events...");
   await new Promise((resolve) => setTimeout(resolve, 1000));
   await util.loadEvents();
   log("LOGIN", "Preceeding to login...");

@@ -23,7 +23,7 @@ export async function login() {
     if (Array.isArray(appState) && appState.length === 0) {
       throw new Error("No Appstate provided");
     }
-    const config = global.Totoro?.config || {
+    const config: TotoroAI.Config = global.Totoro?.config || {
       fcaOptions: {
         listenEvents: true,
         forceLogin: false,
