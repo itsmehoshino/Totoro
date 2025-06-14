@@ -1,5 +1,5 @@
-import express, { Router, Request, Response } from 'express';
-import axios, { AxiosRequestConfig } from 'axios';
+import express from 'express';
+import axios from 'axios';
 
 const router: Router = express.Router();
 
@@ -41,7 +41,7 @@ router.get('/yumi', async (req: Request, res: Response) => {
       enable_proactive_photos: true,
     };
 
-    const config: AxiosRequestConfig = {
+    const config = {
       method: 'POST',
       url: 'https://api.exh.ai/chatbot/v4/botify/response',
       headers: {
