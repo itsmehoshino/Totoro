@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 const MODULES_DIR = join(__dirname, '..', '..', 'totoro', 'modules');
 const FILE_EXTENSION = '.ts';
 
-const util = {
+const util: TotoroAI.TotoroUtils = {
   async loadCommands() {
     const filePath = join(MODULES_DIR, 'commands');
     let loadfiles = [];

@@ -4,9 +4,7 @@ import { fileURLToPath } from 'url';
 import { log } from './system/views/custom';
 import { starter } from './system/views/starter';
 import EventEmitter from "events";
-try {
-  require("./global");
-} catch (error) {}
+import './global';
 
 const bot = new EventEmitter();
 global.bot = bot;

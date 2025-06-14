@@ -9,7 +9,7 @@
   },
   "restartMqtt": {
     "listen": true,
-    "time": 60
+    "time": 90
   },
   "prefix": "/",
   "subprefix": ".",
