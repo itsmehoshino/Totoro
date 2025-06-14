@@ -1,5 +1,5 @@
 import { Response } from './chat/response';
-import fonts from '../../totoro/resources/styler/fonter/fonts';
+import fonts from '../../../totoro/resources/styler/fonter/fonts';
 
 export async function handleCommand({ api, event }) {
   if (!event.body) return;
@@ -36,6 +36,7 @@ export async function handleCommand({ api, event }) {
     response,
     event,
     args,
+    fonts
   };
 
   if (command) {
