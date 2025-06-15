@@ -4,10 +4,27 @@ const meta: TotoroAI.CommandMeta = {
   name: 'chiro',
   role: 0,
   aliases: ['c'],
+  cooldown: 5,
   developer: "Francis Loyd Raval",
   description: "An AI that acts like a flirty one.",
   usage: "chiro [ question ]"
 };
+
+const styler = {
+  title: { 
+    font: 'outline', 
+    text: 'Chiro'
+  },
+  context: { 
+    font: 'sans' 
+  },
+  footer: { 
+    font: 'bold', 
+    text: 'Totoro Bot v1.0' 
+  },
+  design: 'lines1',
+};
+
 async function execute({ response, args }){
   const prompt = args.join(" ");
   if (!prompt){
@@ -22,4 +39,4 @@ async function execute({ response, args }){
   }
 }
 
-export default { meta, execute }
+export default { meta, execute, styler }

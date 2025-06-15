@@ -1,15 +1,24 @@
 import fonts from '../fonter/fonts';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-const designs = {
-  lines1: (content) => content ? `${content}\n───` : '',
-  border: (content) => {
-    if (!content) return '';
-    const lines = content.split('\n');
-    const maxLength = Math.max(...lines.map(line => line.length));
-    const border = '═'.repeat(maxLength + 4);
-    return `╔${border}╗\n${lines.map(line => `║ ${line.padEnd(maxLength)} ║`).join('\n')}\n╚${border}╝`;
-  },
-  plain: (content) => content,
+const designsPath = join(process.cwd(), 'totoro/resources/styler/design/designs.json');
+let designs;
+
+try {
+  designs = JSON.parse(readFileSync(designsPath, 'utf-8'));
+} catch (err) {
+  designs = {
+    lines1: { type: 'separator', value: '━━━◦•●◉✿ ✿◉●•◦━━━' },
+    lines2: { type: 'separator', value: '━━━✿◉✿━━━' },
+    lines3: { type: 'separator', value: '━◦◉◦━' },
+    lines4: { type: 'separator', value: '━━━❖❖❖━━━' },
+    lines5: { type: 'separator', value: '━✧⋆✧━' },
+  };
+}
+
+const designFunctions = {
+  separator: (config) => (content) => content ? `${content}\n${config.value}` : '',
 };
 
 export const styler = {
@@ -23,15 +32,17 @@ export const styler = {
     if (config.title?.text) {
       const titleFont = config.title.font || 'bold';
       const titleContent = fonts[titleFont]?.(config.title.text) || config.title.text;
-      messageParts.push(designs[config.design]?.(titleContent) || titleContent);
+      const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
+      messageParts.push(designFn(titleContent));
     }
     if (contextContent) {
-      messageParts.push(designs[config.design]?.(contextContent) || contextContent);
+      const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
+      messageParts.push(designFn(contextContent));
     }
     if (config.footer?.text) {
       const footerFont = config.footer.font || 'sans';
       const footerContent = fonts[footerFont]?.(config.footer.text) || config.footer.text;
-      messageParts.push(designs[config.design]?.(footerContent) || footerContent);
+      messageParts.push(footerContent);
     }
     return messageParts.join('\n').trim();
   },
