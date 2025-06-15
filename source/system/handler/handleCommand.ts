@@ -15,14 +15,14 @@ export async function handleCommand({ api, event }) {
   } else if (subPrefix && event.body.startsWith(subPrefix)) {
     usedPrefix = subPrefix;
   } else if (botName && event.body.toLowerCase().includes(botName.toLowerCase())) {
-    const response = new Response(api, event);
+    const response = new Response(api, event, '');
     response.reply(fonts.sans(`Hello there!! Missed me? Oh dont know my prefix and subprefix? Here my prefix and subprefix my friend:\n\nPREFIX: [${mainPrefix}]\nSUBPREFIX: [${subPrefix || 'None'}]\n\n${fonts.bold("Developed by: ")} Francis Loyd Raval.`, event.threadID));
     return;
   } else {
     return;
   }
 
-  const response = new Response(api, event);
+  const response = new Response(api, event, '');
 
   if (global.Totoro.config.maintenance && !global.Totoro.config.developer.includes(event.senderID)) {
     response.send('The bot is currently under maintenance and cannot be used', event.threadID);
@@ -34,7 +34,7 @@ export async function handleCommand({ api, event }) {
 
   const entryObj = {
     api,
-    response,
+    response: new Response(api, event, commandName.toLowerCase()),
     event,
     args,
     fonts,

@@ -1,19 +1,22 @@
 import { promisify } from 'util';
 import { log } from '../../views/custom';
+import { styler } from '../../../totoro/resources/styler/design/styler';
 
 export class Response {
   private api;
   private event;
   private sendMessage;
   private editMessage;
+  private commandName;
 
-  constructor(api, event) {
+  constructor(api, event, commandName) {
     if (!api || !event || !event.threadID || typeof api.sendMessage !== 'function' || typeof api.editMessage !== 'function') {
       log('ERROR', 'Invalid Response initialization');
       throw new Error('Invalid Response initialization');
     }
     this.api = api;
     this.event = event;
+    this.commandName = commandName;
     this.sendMessage = promisify(api.sendMessage.bind(api));
     this.editMessage = promisify(api.editMessage.bind(api));
   }
@@ -75,9 +78,16 @@ export class Response {
     }
     try {
       const threadID = goal || this.event.threadID;
+      let formattedMessage = message;
+      if (this.commandName && global.Totoro?.commands?.has(this.commandName)) {
+        const command = global.Totoro.commands.get(this.commandName);
+        if (command.styler) {
+          formattedMessage = styler.format(command.styler, message);
+        }
+      }
       const result = await new Promise((resolve, reject) => {
         this.api.sendMessage(
-          message,
+          formattedMessage,
           threadID,
           (err, info) => {
             if (err) {
