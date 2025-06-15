@@ -75,7 +75,20 @@ export class Response {
     }
     try {
       const threadID = goal || this.event.threadID;
-      const result = await this.sendMessage(message, threadID);
+      const result = await new Promise((resolve, reject) => {
+        this.api.sendMessage(
+          message,
+          threadID,
+          (err, info) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(info);
+            }
+          },
+          this.event.messageID
+        );
+      });
       log('INFO', `Sent reply to thread ${threadID}`);
       return { messageID: result?.messageID };
     } catch (err) {

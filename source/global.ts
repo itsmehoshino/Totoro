@@ -77,6 +77,7 @@ declare global {
 
     interface EntryObj {
       api: any;
+      styler: Styler;
       response: Response;
       event: MessengerEvent;
       args: string[];
