@@ -1,6 +1,6 @@
 import { promisify } from 'util';
 import { log } from '../../views/custom';
-import { styler } from '../../../totoro/resources/styler/design/styler';
+import { styler } from '../../../../totoro/resources/styler/design/styler';
 
 export class Response {
   private api;
