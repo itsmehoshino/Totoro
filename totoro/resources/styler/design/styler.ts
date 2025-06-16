@@ -39,10 +39,11 @@ export const styler = {
       const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
       messageParts.push(designFn(contextContent));
     }
-    if (config.footer?.text) {
+    if (config.footer?.text && config.footer?.enabled) {
       const footerFont = config.footer.font || 'sans';
       const footerContent = fonts[footerFont]?.(config.footer.text) || config.footer.text;
-      messageParts.push(footerContent);
+      const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
+      messageParts.push(designFn('') + `\n${footerContent}`);
     }
     return messageParts.join('\n').trim();
   },
