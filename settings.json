@@ -8,11 +8,11 @@
     "autoMarkDelivery": true
   },
   "restartMqtt": {
-    "listen": true,
+    "listen": false,
     "time": 90
   },
   "prefix": "/",
-  "subprefix": ".",
+  "subprefix": "_",
   "botname": "totoro",
   "maintenance": false,
   "developer": ["61554222594723"],
