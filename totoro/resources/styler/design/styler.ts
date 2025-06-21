@@ -38,8 +38,7 @@ export const styler = {
       if (titleContent) messageParts.push(designFn(titleContent));
     }
     if (contextContent) {
-      const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
-      messageParts.push(designFn(contextContent));
+      messageParts.push(contextContent);
     }
     return messageParts.length > 0 ? messageParts.join('\n').trim() : contextContent;
   },
