@@ -9,11 +9,11 @@ try {
   designs = JSON.parse(readFileSync(designsPath, 'utf-8'));
 } catch (err) {
   designs = {
-    lines1: { type: 'separator', value: '━━━◦•●◉✿ ✿◉●•◦━━━' },
-    lines2: { type: 'separator', value: '━━━✿◉✿━━━' },
-    lines3: { type: 'separator', value: '━◦◉◦━' },
-    lines4: { type: 'separator', value: '━━━❖❖❖━━━' },
-    lines5: { type: 'separator', value: '━✧⋆✧━' },
+    lines1: { type: 'separator', value: '━━━◦•●◉✿ ◖ʲ◗ʰ━━━' },
+    lines2: { type: 'separator', value: '━━━✿◉ʿ━━━' },
+    lines3: { type: 'separator', value: '━◦◉○━' },
+    lines4: { type: 'separator', value: '━━━❖✩✩✩━━━' },
+    lines5: { type: 'separator', value: '━✧✩✧━' },
     lines6: { type: 'separator', value: '━━━' },
   };
 }
@@ -40,12 +40,6 @@ export const styler = {
     if (contextContent) {
       const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
       messageParts.push(designFn(contextContent));
-    }
-    if (config.footer?.text && config.isFooter) {
-      const footerFont = config.footer.font || 'sans';
-      const footerContent = fonts[footerFont]?.(config.footer.text) || config.footer.text;
-      const designFn = designs[config.design]?.type === 'separator' ? designFunctions.separator(designs[config.design]) : (content) => content;
-      messageParts.push(designFn('') + `\n${footerContent}`);
     }
     return messageParts.join('\n').trim();
   },
