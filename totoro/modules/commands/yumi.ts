@@ -18,11 +18,6 @@ const styler = {
   context: {
     font: 'sans'
   },
-  footer: {
-    font: 'bold',
-    text: ''
-  },
-  isFooter: false,
   design: 'lines6'
 };
 
