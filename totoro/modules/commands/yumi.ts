@@ -40,4 +40,4 @@ async function execute({ response, args }){
   }
 }
 
-export default { meta, execute }
+export default { meta, execute, styler }
