@@ -12,7 +12,8 @@ const meta: TotoroAI.CommandMeta = {
 const styler = {
   title: {
     font: 'outline',
-    text: 'YUMI'
+    text: 'YUMI',
+    icon: '👱‍♀️'
   },
   context: {
     font: 'sans'
@@ -22,8 +23,7 @@ const styler = {
     text: ''
   },
   isFooter: false,
-  design: 'lines6',
-  icon: '👱‍♀️'
+  design: 'lines6'
 };
 
 async function execute({ response, args }){
