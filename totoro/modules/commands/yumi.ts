@@ -14,7 +14,7 @@ const styler = {
     font: 'outline',
     text: 'YUMI'
   },
-  content: {
+  context: {
     font: 'sans'
   },
   footer: {
