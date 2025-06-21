@@ -8,6 +8,24 @@ const meta: TotoroAI.CommandMeta = {
   description: "A yandere AI developed by Francis Loyd Raval.",
   usage: "yumi [ question ]"
 };
+
+const styler = {
+  title: {
+    font: 'outline',
+    text: 'YUMI'
+  },
+  content: {
+    font: 'sans'
+  },
+  footer: {
+    font: 'bold',
+    text: ''
+  },
+  isFooter: false,
+  design: 'lines6',
+  icon: '👱‍♀️'
+};
+
 async function execute({ response, args }){
   const prompt = args.join(" ");
   if (!prompt){

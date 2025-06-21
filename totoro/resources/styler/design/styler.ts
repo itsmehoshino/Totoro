@@ -22,7 +22,7 @@ const designFunctions = {
   separator: (config) => (content) => content ? `${content}\n${config.value}` : '',
 };
 
-export default {
+export const styler = {
   format(config, contextText) {
     if (!config.context || !config.design) {
       throw new Error('Invalid styler config: missing context or design');
