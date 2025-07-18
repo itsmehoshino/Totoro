@@ -39,38 +39,39 @@ export class Response {
   }
 
   async setReply(message, goal) {
-    if (!message || (!goal && !this.event.threadID)) {
-      log('ERROR', 'Invalid message or threadID');
-      throw new Error('Invalid message or threadID');
-    }
-    try {
-      const threadID = goal || this.event.threadID;
-      const result = await this.sendMessage(message, threadID);
-      log('INFO', `Set reply message to thread ${threadID}`);
-      const messageID = result?.messageID;
-      return {
-        messageID,
-        replies: (callback) => {
-          if (typeof callback !== 'function') {
-            log('ERROR', 'Invalid reply callback');
-            throw new Error('Invalid reply callback');
-          }
-          if (messageID) {
-            global.Totoro.replies.set(messageID, callback);
-            log('INFO', `Registered reply handler for message ID ${messageID}`);
-            setTimeout(() => global.Totoro.replies.delete(messageID), 1000 * 60 * 5);
-          } else {
-            log('WARNING', 'No messageID returned; reply handler not registered');
-          }
+  if (!message || (!goal && !this.event.threadID)) {
+    log('ERROR', 'Invalid message or threadID');
+    throw new Error('Invalid message or threadID');
+  }
+  try {
+    const threadID = goal || this.event.threadID;
+    const result = await this.sendMessage(message, threadID);
+    log('INFO', `Set reply message to thread ${threadID}`);
+    const messageID = result?.messageID;
+    return {
+      messageID,
+      replies: (callback) => {
+        if (typeof callback !== 'function') {
+          log('ERROR', 'Invalid reply callback');
+          throw new Error('Invalid reply callback');
         }
-      };
+        if (messageID) {
+          global.Totoro.replies.set(messageID, callback);
+          log('INFO', `Registered reply handler for message ID ${messageID}`);
+          const ttl = global.Totoro?.config?.replyTTL ?? 1000 * 60 * 5; // Default 5 minutes
+          setTimeout(() => global.Totoro.replies.delete(messageID), ttl);
+         } else {
+           log('WARNING', 'No messageID returned; reply handler not registered');
+         }
+       }
+     };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      log('ERROR', `Failed to set reply message: ${errorMessage}`);
+     const errorMessage = err instanceof Error ? err.message : String(err);
+     log('ERROR', `Failed to set reply message: ${errorMessage}`);
       throw err;
     }
   }
-
+  
   async reply(message, goal) {
     if (!message || (!goal && !this.event.threadID)) {
       log('ERROR', 'Invalid reply message or threadID');
