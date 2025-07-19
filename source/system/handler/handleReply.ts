@@ -1,7 +1,7 @@
 import { log } from '../views/custom';
 import { Response } from './chat/response';
-import fonts from '../../totoro/resources/styler/fonter/fonts';
-import { styler } from '../../totoro/resources/styler/design/styler';
+import fonts from '../../../totoro/resources/styler/fonter/fonts';
+import { styler } from '../../../totoro/resources/styler/design/styler';
 
 export async function handleReply({ api, event }) {
   if (!api || !event || !event.body || !event.senderID || !event.threadID || !event.messageReply?.messageID) {
