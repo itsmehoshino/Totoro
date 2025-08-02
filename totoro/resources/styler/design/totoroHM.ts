@@ -1,77 +1,81 @@
 import { log } from '../../../../source/system/views/custom';
-import { Response } from '../../../../source/system/handler/chat/response';
 
-export class TotoroHM {
-  private subcommands;
+export async function totoroHM(config, ctx) {
+  const { response, api, event, fonts, styler } = ctx;
 
-  constructor(subcommands) {
-    this.subcommands = subcommands;
+  if (!config.context || !Array.isArray(config.subcommands) || config.subcommands.length === 0) {
+    log('ERROR', 'Invalid totoroHM config: context and non-empty subcommands array are required');
+    return;
   }
 
-  async runinContext(ctx) {
-    const { response, event, fonts, styler, TotoroHM } = ctx;
-    const context = this.subcommands.find((sc) => sc.context)?.context || 'Please choose an option:';
-    const subcommandList = this.subcommands
-      .map((sc, index) => sc.text ? `${index + 1}. ${sc.text}` : null)
-      .filter(Boolean)
-      .join('\n');
-
-    if (!subcommandList) {
-      log('ERROR', 'No valid subcommands provided in TotoroHM');
-      await response.send(fonts.sans('No subcommands available.'), event.threadID);
+  for (const subcommand of config.subcommands) {
+    if (!subcommand.subcommand || !subcommand.text || typeof subcommand.execute !== 'function') {
+      log('ERROR', `Invalid subcommand: ${JSON.stringify(subcommand)}`);
       return;
     }
+  }
 
-    const menuMessage = fonts.sans(
-      `${context}\n\n${subcommandList}\n${this.subcommands.length + 1}. Back\n${this.subcommands.length + 2}. Nevermind\n\nReply with a number to select an option.`
-    );
+  const subcommandsWithNevermind = [
+    ...config.subcommands,
+    {
+      subcommand: 'nevermind',
+      text: 'Nevermind',
+      async execute({ response }) {
+        response.reply(fonts.sans('Goodbye friend'));
+      },
+    },
+  ];
 
-    const sendMenu = async (targetResponse: Response, targetEvent: any) => {
-      const { messageID, replies } = await targetResponse.setReply(menuMessage, targetEvent.threadID);
-      replies(async ({ response: replyResponse, event: replyEvent, fonts }) => {
-        const userInput = replyEvent.body.trim();
+  async function sendMenu(threadID) {
+    const menuItems = subcommandsWithNevermind.map((sub, index) => `${index + 1}. ${sub.text}`).join('\n');
+    const message = fonts.sans(`${config.context}\n\n${menuItems}\n\nPlease reply to this message with a number to select an option.`);
+
+    try {
+      const messageInfo = await response.reply(message, threadID);
+      if (!messageInfo?.messageID) {
+        log('ERROR', 'Failed to send menu message: no messageID returned');
+        return;
+      }
+
+      global.Totoro.replies.set(messageInfo.messageID, async ({ response, api, event, fonts, styler }) => {
+        const userInput = event.body?.trim();
         const choice = parseInt(userInput, 10) - 1;
 
-        if (isNaN(choice) || choice < 0 || choice > this.subcommands.length + 1) {
-          await replyResponse.send(
-            fonts.sans(`Invalid choice. Please reply with a number between 1 and ${this.subcommands.length + 2}.`),
-            replyEvent.threadID
-          );
+        if (isNaN(choice) || choice < 0 || choice >= subcommandsWithNevermind.length) {
+          response.reply(fonts.sans(`Invalid choice. Please reply with a number between 1 and ${subcommandsWithNevermind.length}.`));
           return;
         }
 
-        if (choice === this.subcommands.length) {
-          await this.runinContext({ response: replyResponse, event: replyEvent, fonts });
-          return;
-        }
-
-        if (choice === this.subcommands.length + 1) {
-          await replyResponse.send(fonts.sans('Goodbye'), replyEvent.threadID);
-          return;
-        }
-
-        if (!this.subcommands[choice].execute) {
-          await replyResponse.send(
-            fonts.sans(`Invalid choice. Please reply with a number between 1 and ${this.subcommands.length + 2}.`),
-            replyEvent.threadID
-          );
-          return;
-        }
-
+        const selectedSubcommand = subcommandsWithNevermind[choice];
         try {
-          await this.subcommands[choice].execute({ response: replyResponse, fonts });
-          log('INFO', `Executed subcommand "${this.subcommands[choice].subcommand || choice}" for message ID ${messageID}`);
+          const subcommandResponse = await selectedSubcommand.execute({ response, api, event, fonts, styler });
+          log('INFO', `Executed subcommand "${selectedSubcommand.subcommand}" for message ID ${messageInfo.messageID}`);
+
+          if (subcommandResponse?.messageID) {
+            global.Totoro.replies.set(subcommandResponse.messageID, async ({ response, api, event }) => {
+              const backInput = event.body?.trim().toLowerCase();
+              if (backInput === 'back') {
+                await sendMenu(event.threadID);
+                global.Totoro.replies.delete(subcommandResponse.messageID);
+              }
+            });
+          }
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
-          log('ERROR', `Error executing subcommand "${this.subcommands[choice].subcommand || choice}": ${errorMessage}`);
-          await replyResponse.send(
-            fonts.sans(`Error executing option ${choice + 1}: ${errorMessage}`),
-            replyEvent.threadID
-          );
+          log('ERROR', `Error executing subcommand "${selectedSubcommand.subcommand}": ${errorMessage}`);
+          response.reply(fonts.sans(`Error executing "${selectedSubcommand.subcommand}": ${errorMessage}`));
         }
-      });
-    };
 
-    await sendMenu(response, event);
+        global.Totoro.replies.delete(messageInfo.messageID);
+      });
+
+      log('INFO', `Sent menu for command in thread ${threadID}, message ID ${messageInfo.messageID}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      log('ERROR', `Failed to send menu message: ${errorMessage}`);
+      response.reply(fonts.sans('An error occurred while displaying the menu. Please try again.'));
+    }
   }
+
+  await sendMenu(event.threadID);
 }

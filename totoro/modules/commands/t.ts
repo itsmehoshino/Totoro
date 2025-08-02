@@ -1,29 +1,30 @@
 const meta = {
-  name: "test4"
+  name: 'test4',
 };
 
 async function execute(ctx) {
-  const home = new TotoroHM([
+  await ctx.totoroHM(
     {
-      context: "Hi, what would you choose?",
+      context: 'Hi what would you choose',
+      subcommands: [
+        {
+          subcommand: 'test 1',
+          text: 'use test1',
+          async execute({ response, fonts }) {
+            response.reply(fonts.sans('hi'));
+          },
+        },
+        {
+          subcommand: 'test 2',
+          text: 'use test2',
+          async execute({ response, fonts }) {
+            response.reply(fonts.sans('hi'));
+          },
+        },
+      ],
     },
-    {
-      subcommand: "test 1",
-      text: "use test1",
-      execute: async ({ response, fonts }) => {
-        await response.reply(fonts.sans("Hi from test1!"), ctx.event.threadID);
-      },
-    },
-    {
-      subcommand: "test 2",
-      text: "use test2",
-      execute: async ({ response, fonts }) => {
-        await response.reply(fonts.sans("Hi from test2!"), ctx.event.threadID);
-      },
-    },
-  ]);
-
-  await home.runinContext(ctx);
+    ctx
+  );
 }
 
 export default { meta, execute };

@@ -8,7 +8,7 @@
     "autoMarkDelivery": true
   },
   "restartMqtt": {
-    "listen": false,
+    "listen": true,
     "time": 90
   },
   "prefix": "/",
