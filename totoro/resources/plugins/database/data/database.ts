@@ -1,57 +1,29 @@
-import { CassMongoManager } from "./cass-mongo";
-import * as dotenv from "dotenv";
+import { CassMongo, CassMongoManager } from './cass-mongo';
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
 
-export class TotoroDB {
-  private manager: CassMongoManager;
-  private db: InstanceType<typeof CassMongoManager.prototype.getInstance>;
+const manager = new CassMongoManager();
 
-  constructor(collection: string = "totoroGameDB") {
-    this.manager = new CassMongoManager();
-    const uri = this.getMongoURI();
-    this.db = this.manager.getInstance({
-      uri,
-      collection,
-      ignoreError: true,
-      allowClear: true,
-    });
-  }
+const cassMongo = manager.getInstance({
+  uri: process.env.MONGO_URI || 'mongodb://localhost:27017/myDatabase',
+  collection: 'keyvalue',
+  ignoreError: true,
+  allowClear: true,
+});
 
-  private getMongoURI(): string {
-    const defaultURI = "mongodb://localhost:27017/testdb";
-    const mongoURI = process.env.MONGO_URI || defaultURI;
-    if (!mongoURI) {
-      throw new Error("MongoDB URI is not defined in environment variables (MONGO_URI)");
+let isInitialized = false;
+async function initializeMongo() {
+  if (!isInitialized) {
+    try {
+      await cassMongo.start();
+      isInitialized = true;
+    } catch (error) {
+      throw error;
     }
-    return mongoURI;
-  }
-
-  getDatabase() {
-    return this.db;
-  }
-
-  async start() {
-    await this.db.start();
-  }
-
-  async put(key: any, value: any) {
-    await this.db.put(key, value);
-  }
-
-  async get(key: any) {
-    return await this.db.get(key);
-  }
-
-  async remove(key: any) {
-    await this.db.remove(key);
-  }
-
-  async clear() {
-    await this.db.clear();
-  }
-
-  async entries() {
-    return await this.db.entries();
   }
 }
+
+initializeMongo().catch((error) => {});
+
+export { cassMongo, manager };

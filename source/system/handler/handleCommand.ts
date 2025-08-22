@@ -2,6 +2,7 @@ import { Response } from './chat/response';
 import { styler } from '../../../totoro/resources/styler/design/styler';
 import fonts from '../../../totoro/resources/styler/fonter/fonts';
 import { totoroHM } from '../../../totoro/resources/styler/design/totoroHM';
+import { cassMongo } from '../../../totoro/resources/plugins/database/data/database';
 
 export async function handleCommand({ api, event }) {
   if (!event.body) return;
@@ -40,7 +41,8 @@ export async function handleCommand({ api, event }) {
     args,
     fonts,
     styler,
-    totoroHM, // Add totoroHM to entryObj
+    totoroHM,
+    database: cassMongo,
   };
 
   if (command) {

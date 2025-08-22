@@ -143,11 +143,11 @@ class CassMongo {
       }
     }
   }
-
   async bulkGetEntries(...keys: any[]): Promise<[string, any][]> {
     keys = keys.flat();
     try {
       const results = await this.KeyValue.find({ key: { $in: keys } });
+
       return results.map((result: { key: any; value: any }) => [
         result.key,
         result.value,
