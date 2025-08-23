@@ -31,7 +31,7 @@
     },
     {
         "name": "fr",
-        "value": "0CFLmkoVieycnRs2K.AWfsCdOQxbhVZz0dS57oybQO4s6n4BoZ6xxfi5SHw5KyFZYFBrs.BoSrO2..AAA.0.0.BogO00.AWe8CxBZjwImG7k18VOPwflNuqY",
+        "value": "0CFLmkoVieycnRs2K.AWch7v6kCeJBJ59DVEEm_Jrf1QNIllU72diiQ3X-gYnGOR2mCLg.BoSrO2..AAA.0.0.BoqRWP.AWc5BPEyrMi7SIVRPka2ATOEVLk",
         "domain": ".facebook.com",
         "hostOnly": false,
         "path": "/",
@@ -61,7 +61,7 @@
     },
     {
         "name": "xs",
-        "value": "28%3AW5nYfmcCHkKmeg%3A2%3A1753279789%3A-1%3A-1",
+        "value": "15%3AaVjbcjlC8TxeFg%3A2%3A1755911552%3A-1%3A-1",
         "domain": ".facebook.com",
         "hostOnly": false,
         "path": "/",
@@ -76,7 +76,7 @@
     },
     {
         "name": "fbl_st",
-        "value": "100427787%3BT%3A29221329",
+        "value": "101736120%3BT%3A29265192",
         "domain": ".facebook.com",
         "hostOnly": false,
         "path": "/",
@@ -194,7 +194,7 @@
     },
     {
         "name": "wl_cbv",
-        "value": "v2%3Bclient_version%3A2877%3Btimestamp%3A1753279796",
+        "value": "v2%3Bclient_version%3A2900%3Btimestamp%3A1755911567",
         "domain": ".facebook.com",
         "hostOnly": false,
         "path": "/",
