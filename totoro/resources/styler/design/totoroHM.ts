@@ -1,7 +1,7 @@
 import { log } from '../../../../source/system/views/custom';
 
 export async function totoroHM(config, ctx) {
-  const { response, api, event, fonts, styler } = ctx;
+  const { response, api, event, fonts, styler, database } = ctx;
 
   if (!config.context || !Array.isArray(config.subcommands) || config.subcommands.length === 0) {
     log('ERROR', 'Invalid totoroHM config: context and non-empty subcommands array are required');
