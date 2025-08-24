@@ -1,5 +1,4 @@
-import { readFileSync, existsSync } from "fs"; 
-import { execSync } from "child_process";
+import { readFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { promisify } from "util";
@@ -9,41 +8,38 @@ import { listener } from "../listener";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-try {
-  require.resolve("chatbox-fca-remake");
-} catch (e) {
-  log("INFO", "chatbox-fca-remake not found, installing...");
-  try {
-    execSync("npm install chatbox-fca-remake", { stdio: "inherit" });
-    log("INFO", "chatbox-fca-remake installed successfully");
-  } catch (installError) {
-    log("ERROR", `Failed to install chatbox-fca-remake: ${installError.message}`);
-    throw installError;
-  }
-}
-
-const loginPromisified = promisify(require("chatbox-fca-remake"));
+import fca from "facebook-chat-api";
+fca.logging(false);
+const loginPromisified = promisify(fca.login);
 
 export async function login() {
   try {
     log("FACEBOOK", "Logging in...");
-    const appStatePath = join(__dirname, "..", "..", "..", "appstate.json");
-    if (!existsSync(appStatePath)) {
-      throw new Error("appstate.json file not found");
+    const cookiesPath = join(__dirname, "..", "..", "..", "cookies.json");
+    if (!existsSync(cookiesPath)) {
+      throw new Error("cookies.json file not found");
     }
-    const appState = JSON.parse(readFileSync(appStatePath, "utf-8"));
+    const appState = JSON.parse(readFileSync(cookiesPath, "utf-8"));
     if (Array.isArray(appState) && appState.length === 0) {
       throw new Error("No Appstate provided");
     }
-    const config = global.Totoro?.config?.fcaOptions || {
-      listenEvents: true,
-      forceLogin: false,
-      selfListen: false,
-      autoReconnect: true,
-      autoMarkDelivery: true,
+    const config: TotoroAI.Config = global.Totoro?.config || {
+      fcaOptions: {
+        listenEvents: true,
+        forceLogin: false,
+        selfListen: false,
+        autoReconnect: true,
+        autoMarkDelivery: true,
+      },
     };
-    const api = await loginPromisified({ appState }, config);
-    api.setOptions(config);
+    const api = await loginPromisified({ appState }, {
+      listenEvents: config.fcaOptions.listenEvents,
+      forceLogin: config.fcaOptions.forceLogin,
+      selfListen: config.fcaOptions.selfListen,
+      userAgent: config.fcaOptions.userAgent,
+      autoReconnect: config.fcaOptions.autoReconnect,
+      autoMarkDelivery: config.fcaOptions.autoMarkDelivery,
+    });
     api.listenMqtt((err, event) => {
       if (err) {
         const errorMessage = err.error || err.message || String(err);
@@ -57,6 +53,5 @@ export async function login() {
   } catch (error) {
     const errorMessage = error.error || error.message || String(error);
     log("FACEBOOK", `Login failed: ${errorMessage}`);
-    throw error;
   }
 }
