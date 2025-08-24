@@ -5,19 +5,19 @@ import { styler } from '../../../../totoro/resources/styler/design/styler';
 export class Response {
   private api;
   private event;
-  private sendMessage;
+  private sendMessageMqtt;
   private editMessage;
   private commandName;
 
   constructor(api, event, commandName) {
-    if (!api || !event || !event.threadID || typeof api.sendMessage !== 'function' || typeof api.editMessage !== 'function') {
+    if (!api || !event || !event.threadID || typeof api.sendMessageMqtt !== 'function' || typeof api.editMessage !== 'function') {
       log('ERROR', 'Invalid Response initialization');
       throw new Error('Invalid Response initialization');
     }
     this.api = api;
     this.event = event;
     this.commandName = commandName;
-    this.sendMessage = promisify(api.sendMessage.bind(api));
+    this.sendMessageMqtt = promisify(api.sendMessageMqtt.bind(api));
     this.editMessage = promisify(api.editMessage.bind(api));
   }
 
@@ -28,7 +28,7 @@ export class Response {
     }
     try {
       const threadID = goal || this.event.threadID;
-      const result = await this.sendMessage(message, threadID);
+      const result = await this.sendMessageMqtt(message, threadID);
       log('INFO', `Sent message to thread ${threadID}`);
       return { messageID: result?.messageID };
     } catch (err) {
@@ -45,7 +45,7 @@ export class Response {
   }
   try {
     const threadID = goal || this.event.threadID;
-    const result = await this.sendMessage(message, threadID);
+    const result = await this.sendMessageMqtt(message, threadID);
     log('INFO', `Set reply message to thread ${threadID}`);
     const messageID = result?.messageID;
     return {
@@ -87,7 +87,7 @@ export class Response {
         }
       }
       const result = await new Promise((resolve, reject) => {
-        this.api.sendMessage(
+        this.api.sendMessageMqtt(
           formattedMessage,
           threadID,
           (err, info) => {
