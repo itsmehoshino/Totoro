@@ -8,8 +8,7 @@ import { listener } from "../listener";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import fca from "facebook-chat-api";
-fca.logging(false);
+import fca from "ws3-fca";
 const loginPromisified = promisify(fca.login);
 
 export async function login() {
