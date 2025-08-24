@@ -26,7 +26,8 @@
     "openai": "latest",
     "path": "^0.12.7",
     "websocket": "^1.0.35",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "ws3-fca": "github:NethWs3Dev/ws3-fca"
   },
   "devDependencies": {
     "@types/node": "^20.17.54",
