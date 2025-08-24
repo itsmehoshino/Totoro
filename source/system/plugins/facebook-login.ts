@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "fs-extra";
+import { readFileSync, existsSync } from "fs"; 
 import { execSync } from "child_process";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
