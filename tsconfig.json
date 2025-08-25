@@ -21,7 +21,7 @@
 		"noUnusedParameters": true,
 		"strictFunctionTypes": true,
 		"exactOptionalPropertyTypes": true,
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"useUnknownInCatchVariables": true,
 		"moduleResolution": "node",
 		"allowSyntheticDefaultImports": true
