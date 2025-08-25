@@ -149,4 +149,4 @@ async function execute(ctx) {
   }
 }
 
-export default { meta, execute };
+export default { meta, execute } as TotoroAI.CommandMeta;
