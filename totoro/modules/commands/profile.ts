@@ -5,7 +5,7 @@ function generateGameID() {
   return `${randomLetter}${randomNumber}`;
 }
 
-const meta = {
+const meta: TotoroAI.CommandMeta = {
   name: 'profile',
   role: 0,
   cooldown: 5,
