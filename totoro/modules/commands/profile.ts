@@ -59,7 +59,7 @@ async function execute(ctx) {
                 });
                 response.reply(`Successfully registered as ${username}! Game ID: ${gameid}\nReply "back" to return to the menu.`);
               } catch (error) {
-                response.reply('Failed to register profile. Try again later.');
+                response.reply('Failed to register profile. Try again later.' + error.stack);
               }
             },
           },
@@ -85,7 +85,7 @@ async function execute(ctx) {
                 ];
                 response.reply(texts.join('\n') + '\nReply "back" to return to the menu.');
               } catch (error) {
-                response.reply('Failed to retrieve profile. Try again later.');
+                response.reply('Failed to retrieve profile. Try again later.' + error.stack);
               }
             },
           },
