@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 function launchProcess(instanceIndex: number): void {
   const childProcess: ChildProcess = spawn(
     "tsx",
-    ["--trace-warnings", "--async-stack-traces", "./source/main.ts"],
+    ["--trace-warnings", "--async-stack-traces", "./starter.js"],
     {
       cwd: __dirname,
       stdio: "inherit",
